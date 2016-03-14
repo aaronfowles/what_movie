@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.css"/>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<style type="text/css">
+		.idunno-carousel {
+    background: #4080bf;
+    height: 50%;
+	}
+		p {
+	font-size: 300%;
+	color: #ffffff;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 10%;
+	padding-bottom: 10%;
+		}
+		#status-label {
+			font-size: 100%;
+			color: #ffffff;
+			width: 100%;
+		}
+
+		h1 {
+			font-size: 500%;
+		}
+		html, body, #map {
+    		margin:0;
+    		padding:0;
+    		height: 100%;
+		}
+	</style>
+	</head>
+	<body>
+		<div class="row">
+			<div class="col-md-12" style="align-self: middle">
+				<h1>iDunno</h1>
+			</div>
+		</div>
+		<div class="row" id="progress-row">
+			<div>
+				<progress id="progress" class="progress-bar" value="0" max="100" style="width: 100%;"></progress>
+			</div>
+		</div>
+		<div class="row">
+			<div class="idunno-carousel" id="swiper">
+				<div>
+					<p class="option-text" id="1"></p>
+				</div>
+				<div>
+					<p class="option-text" id="2"></p>
+				</div>
+				<div>
+					<p class="option-text" id="3"></p>
+				</div>
+			</div>
+		</div>
+		<div class="row" id="status-row">
+			<div>
+				<h2 style="text-align: center; margin:auto;"><span id="status-label" class="label label-info" style="text-align: center; margin:auto; display:table; height: 10%;"></span></h2>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row" id="suggest-row">
+				<div style="text-align: center; margin:auto;">
+					<div id="suggestion-label" style="font-size: 200%;"></div>
+					<div id="suggestion-options">
+						<div style="height: 30%; padding: 10%;" id="confirm-suggestion" class="button btn-success btn-lg">Eat cake!</div>
+						<div style="height:30%; padding: 10%;" id="restart" class="button btn-info btn-lg">Start again</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<div id="map">
+	</div>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
+	<script>
+	$.mobile.autoInitializePage = false;
+	var map;
+	var service;
+	var loc;
+	var current_id = 1;
+	var question_id = 1;
+	var yes_id = 3;
+	var no_id = 2;
+	var counter = 0;
+	var decisions = [];
+	decisions[0] = "Hungry?";
+	decisions[1] = "...something sweet?";
+	decisions[2] = "...something savoury?";
+	decisions[3] = "...within 10 mins walk?";
+	decisions[4] = "...delivery?";
+	decider = function(direction) {
+		counter++;
+		var new_prog = counter*20;
+		$("#progress").attr('value',new_prog); 
+		$("#status-label").removeClass('label-info');
+		if (direction=="right") {
+			$("#status-label").text("Yes :)");
+			$("#status-label").addClass('label label-success');
+			switch(current_id) {
+				case 1:
+					question_id = 3;
+					yes_id = 2;
+					no_id = 1;
+					break;
+				case 2:
+					question_id = 1;
+					yes_id = 3;
+					no_id = 2;
+					break;
+				case 3:
+					question_id = 2;
+					yes_id = 1;
+					no_id = 3;
+					break;
+			}
+		} else if(direction == "left") {
+			$("#status-label").text("No :(");
+			$("#status-label").addClass('label label-danger');
+			switch(current_id) {
+				case 1:
+					question_id = 2;
+					yes_id = 1;
+					no_id = 3;
+					break;
+				case 2:
+					question_id = 3;
+					yes_id = 2;
+					no_id = 1;
+					break;
+				case 3:
+					question_id = 1;
+					yes_id = 3;
+					no_id = 2;
+					break;
+			}
+		}
+		current_id = question_id;
+		var question_string = "#" + question_id.toString();
+		$(question_string).animate({opacity:1},200);
+		$(question_string).text(decisions[counter]);
+
+		$("#status-label").animate({opacity:1},500, function() {
+			$(this).animate({opacity:0},1000, function() {
+				$(this).removeClass('label-success');
+				$(this).removeClass('label-danger');
+			});
+		});
+
+		if (counter == 5) {
+			$("#swiper").animate({opacity:'0',height:'0px'},500);
+			$("#progress-row").animate({opacity:0, height:'0px'},500);
+			$("#status-row").animate({height:'0px'},500);
+			$("#suggest-row").show();
+			$("#suggest-row").animate({opacity:1},500);
+			$("#suggestion-label").text("iDunno thinks you should eat cake. Do you agree?");
+			if (direction == 'right') {
+				$("#status-label").removeClass('label-success');
+			} else {
+				$("#status-label").removeClass('label-danger');
+			}
+			$("#swiper").hide();
+
+		}
+	}
+		$("#swiper").on("swipe", function(event, slick, direction) {
+			$(".option-text").animate({opacity:0},200).delay(200);
+			decider(direction);
+		});
+
+		function restart() {
+			location.reload();
+		}
+
+		function choose_activity() {
+			initMap(loc);
+
+			service = new google.maps.places.PlacesService(map);
+
+			map.setCenter(loc);
+
+			var request = {
+    			location: loc,
+    			radius: '1',
+    			query: 'cakes'
+  			};
+
+  			var places = [];
+  			var markers = [];
+  			var place;
+  			var marker;
+
+  			service.textSearch(request, function callback(results, status) {
+  				if (status == google.maps.places.PlacesServiceStatus.OK) {
+    				for (var i = 0; i < results.length; i++) {
+      					place = results[i];
+      					places.push(place);
+      					marker = new google.maps.Marker({
+      						position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
+      						title: place['name'].toString(),
+      						map: map
+      					});
+      					markers.push(marker);
+    				}
+  				}	
+			});
+		}
+		
+      	function initMap(loc) {
+        	map = new google.maps.Map(document.getElementById('map'), {
+          	center: loc,
+          	zoom: 14
+        	});
+		}
+		$(document).ready(function() {
+			$("#suggest-row").hide();
+			var slickOpts = {
+        	slidesToShow: 1,
+        	slidesToScroll: 1,
+        	dots: false,
+        	prevArrow: '.btn-prev',
+        	nextArrow: '.btn-next',
+        	centerMode: true
+			};
+			$('.idunno-carousel').slick(slickOpts);
+			$("#1").text(decisions[0]);
+			$("#status-label").text("...swipe right for yes, left for no...");
+			$("#status-label").animate({opacity:1},500);
+			$("#progress").animate({opacity:1},500);
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+  					loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				});
+			}	
+			else {	
+				loc = new google.maps.LatLng(50,5);
+			}
+			$("#confirm-suggestion").on("click", choose_activity);
+			$("#restart").on("click", restart);
+		});
+	</script>
+	</body>
+</html>
