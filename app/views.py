@@ -4,9 +4,9 @@ from . import models
 def index(request):
     context = {}
     # Get all known tags
-    all_tags = models.Tag.objects.all()
+    all_tags = list(models.Tag.objects.all())
     # Select 5 for questions
-    question_tags = all_tags[:5]
+    question_tags = list( all_tags[:5])
     context['all_tags'] = all_tags
     context['question_tags'] = question_tags
     return render(request, 'app/index.html', context)
