@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 # Activity. AcivityID,ActivityName,ActivityClass
 class Activity(models.Model):
@@ -30,16 +31,11 @@ class ActivityTag(models.Model):
 # User Selections. Outcome,(QTagID,QTagOutcome) x 5
 class UserSelection(models.Model):
     outcome = models.BooleanField()
-    q1_tag_id = models.IntegerField()
-    q1_tag_outcome = models.BooleanField()
-    q2_tag_id = models.IntegerField()
-    q2_tag_outcome = models.BooleanField()
-    q3_tag_id = models.IntegerField()
-    q3_tag_outcome = models.BooleanField()
-    q4_tag_id = models.IntegerField()
-    q4_tag_outcome = models.BooleanField()
-    q5_tag_id = models.IntegerField()
-    q5_tag_outcome = models.BooleanField()
+    suggested_activity = models.ForeignKey(Activity,on_delete=models.PROTECT)
     datetime = models.DateTimeField(auto_now=False)
     lat = models.FloatField()
     lng = models.FloatField()
+    json_field = JSONField()
+
+    def __str__(self):
+        return str(self.datetime) + str(suggested_activity) + str(outcome)

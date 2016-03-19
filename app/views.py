@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from . import models
+from random import randint
+
 # Create your views here.
 def index(request):
+    context = {}
     # Get all known tags
-<<<<<<< HEAD
     # Select 5 for questions
-    return render(request, 'app/index.html', {"all_tags": "I don't know"})
-=======
     all_tags = list(models.Tag.objects.all())
     # Select 5 for questions
-    question_tags = list( all_tags[:5])
-    context['all_tags'] = all_tags
-    context['question_tags'] = question_tags
+    rand_selection = []
+    for i in range(0,5):
+        rand_selection.append(randint(0,len(all_tags)-1))
+    context['question_tags'] = []
+    for i in range(0,5):
+        context['question_tags'].append(all_tags[rand_selection[i]])
     return render(request, 'app/index.html', context)
->>>>>>> f00ef8906f2adae77317935bd723d85aab905ba8
