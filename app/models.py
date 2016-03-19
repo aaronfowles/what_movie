@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 # Activity. AcivityID,ActivityName,ActivityClass
 class Activity(models.Model):
     activity_name = models.CharField(max_length=50)
-    activity_class = models.CharField(max_length=50)
+    search_term = models.CharField(max_length=50)
     activity_desc = models.CharField(max_length=50)
 
     def __str__(self):
@@ -35,7 +35,7 @@ class UserSelection(models.Model):
     datetime = models.DateTimeField(auto_now=False)
     lat = models.FloatField()
     lng = models.FloatField()
-    json_field = JSONField()
+    #json_field = JSONField()
 
     def __str__(self):
         return str(self.datetime) + str(suggested_activity) + str(outcome)

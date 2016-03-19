@@ -82,6 +82,7 @@
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
 	$.mobile.autoInitializePage = false;
+        var activity_suggestion = "";
 	var map;
 	var service;
 	var loc;
@@ -92,12 +93,15 @@
 	var counter = 0;
 	var decisions = [];
         var decisions_struct = [];
-        for_counter = 0;
+        var no_list = [];
+        var yes_list = [];
+        var for_counter = 0;
         {% for tag in question_tags %}
             decisions_struct[for_counter] = {};
             decisions_struct[for_counter]['tag_id'] = "{{ tag.id }}";
             decisions_struct[for_counter]['tag_name'] = "{{ tag.tag_name }}";
             decisions_struct[for_counter]['question_text'] = "{{ tag.question_text }}";
+            decisions_struct[for_counter]['yes_or_no'] = 0;
             for_counter++;
         {% endfor %}
 
@@ -114,6 +118,8 @@
 		$("#status-label").removeClass('label-info');
 		if (direction=="right") {
 			$("#status-label").text("Yes :)");
+                        yes_list.push(decisions_struct[counter-1]['tag_id']);
+                        decisions_struct[counter-1]['yes_or_no'] = 1;
 			$("#status-label").addClass('label label-success');
 			switch(current_id) {
 				case 1:
@@ -134,6 +140,8 @@
 			}
 		} else if(direction == "left") {
 			$("#status-label").text("No :(");
+                        no_list.push(decisions_struct[counter-1]['tag_id']);
+                        decisions_struct[counter-1]['yes_or_no'] = 0;
 			$("#status-label").addClass('label label-danger');
 			switch(current_id) {
 				case 1:
@@ -156,7 +164,8 @@
 		current_id = question_id;
 		var question_string = "#" + question_id.toString();
 		$(question_string).animate({opacity:1},200);
-		$(question_string).text(decisions[counter]);
+                var question_formatted = "Do you want to " + decisions[counter] + "?";
+		$(question_string).text(question_formatted);
 
 		$("#status-label").animate({opacity:1},500, function() {
 			$(this).animate({opacity:0},1000, function() {
@@ -171,7 +180,14 @@
 			$("#status-row").hide();
 			$("#suggest-row").show();
 			$("#suggest-row").animate({opacity:1},500);
-			$("#suggestion-label").text("iDunno thinks you should eat cake. Do you agree?");
+                        $.get("http://idunno.io:80/api/get_activities",
+                            {'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
+                            function(res) {
+                                $("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
+                                $("#confirm-suggestion").text(res['activity_desc'])
+                                activity_suggestion = res['activity_name'];
+                            }
+                        );
 			if (direction == 'right') {
 				$("#status-label").removeClass('label-success');
 			} else {
@@ -200,7 +216,7 @@
 			var request = {
     			location: loc,
     			radius: '1',
-    			query: 'cakes'
+    			query: activity_suggestion
   			};
 
   			var places = [];
@@ -241,7 +257,7 @@
         	centerMode: true
 			};
 			$('.idunno-carousel').slick(slickOpts);
-			$("#1").text(decisions[0]);
+			$("#1").text("Do you want to " + decisions[0] + "?");
 			$("#status-label").text("...swipe right for yes, left for no...");
 			$("#status-label").animate({opacity:1},500);
 			$("#progress").animate({opacity:1},500);
