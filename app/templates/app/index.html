@@ -40,7 +40,11 @@
 	<body>
 		<div class="row">
 			<div class="col-md-12" style="align-self: middle">
+<<<<<<< HEAD
                                 <h1>{{ all_tags }}</h1>
+=======
+				<h1>iDunno</h1>
+>>>>>>> f00ef8906f2adae77317935bd723d85aab905ba8
 			</div>
 		</div>
 		<div class="row" id="progress-row">
@@ -91,11 +95,19 @@
 	var no_id = 2;
 	var counter = 0;
 	var decisions = [];
+<<<<<<< HEAD
 	decisions[0] = "Hungry?";
 	decisions[1] = "{{ all_tags}}";
 	decisions[2] = "...something savoury?";
 	decisions[3] = "...within 10 mins walk?";
 	decisions[4] = "...delivery?";
+=======
+	decisions[0] = "{{question_tags[0].tag_question}}";
+	decisions[1] = "{{question_tags[1].tag_question}}";
+	decisions[2] = "{{question_tags[2].tag_question}}";
+	decisions[3] = "{{question_tags[3].tag_question}}";
+	decisions[4] = "{{question_tags[4].tag_question}}";
+>>>>>>> f00ef8906f2adae77317935bd723d85aab905ba8
 	decider = function(direction) {
 		counter++;
 		var new_prog = counter*20;
