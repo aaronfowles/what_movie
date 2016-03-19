@@ -39,8 +39,8 @@
 	</head>
 	<body>
 		<div class="row">
-			<div class="col-md-12" style="align-self: middle">
-                                <h1>{{ all_tags }}</h1>
+			<div class="col-md-12" style="align-self: mi
+                                <h1>{{ i }}</h1>
 			</div>
 		</div>
 		<div class="row" id="progress-row">
@@ -92,7 +92,7 @@
 	var counter = 0;
 	var decisions = [];
 	decisions[0] = "Hungry?";
-	decisions[1] = "{{ all_tags}}";
+	decisions[1] = "...something sweet?";
 	decisions[2] = "...something savoury?";
 	decisions[3] = "...within 10 mins walk?";
 	decisions[4] = "...delivery?";
