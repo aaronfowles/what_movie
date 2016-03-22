@@ -66,27 +66,33 @@
 				<h2 style="text-align: center; margin:auto;"><span id="status-label" class="label label-info" style="text-align: center; margin:auto; display:table; height: 10%;"></span></h2>
 			</div>
 		</div>
-		<div class="container-fluid">
-			<div class="row" id="suggest-row">
-				<div style="text-align: center; margin:auto;">
-					<div id="suggestion-label" style="font-size: 200%;"></div>
-					<div id="suggestion-options">
-						<div style="height: 30%; padding: 10%;" id="confirm-suggestion" class="button btn-success btn-lg"></div>
-						<div style="height:30%; padding: 10%;" id="restart" class="button btn-info btn-lg">Start again</div>
-					</div>
+		<div class="row" id="suggest-row">
+			<div style="text-align: center; margin:auto;">
+				<div id="suggestion-label" style="font-size: 200%;">
 				</div>
+					<div id="suggestion-options">
+						<div style="height: 30%; padding: 10%;" id="confirm-suggestion" class="button btn-success btn-lg">
+						</div>
+						<div style="height:30%; padding: 10%;" id="restart" class="button btn-info btn-lg">
+							Start again
+						</div>
+					</div>
 			</div>
-                        <div class="row">
-                        <ul id="places-list">
-                        </ul>
-                        </div>
-	                <div class="row "id="map">
-	                </div>
-              </div>
+		</div>
+        <div class="row">
+            <ul id="places-list">
+            </ul>
+        </div>
+	    <div class="row "id="map">
+	    </div>
+	    <div class="row">
+	    	<ul id="search-list">
+	    	</ul>
+	    </div>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
 	$.mobile.autoInitializePage = false;
-        var activity_suggestion = "";
+    var activity_suggestion = "";
 	var map;
 	var service;
 	var loc;
@@ -96,18 +102,18 @@
 	var no_id = 2;
 	var counter = 0;
 	var decisions = [];
-        var decisions_struct = [];
-        var no_list = [];
-        var yes_list = [];
-        var for_counter = 0;
-        {% for tag in question_tags %}
-            decisions_struct[for_counter] = {};
-            decisions_struct[for_counter]['tag_id'] = "{{ tag.id }}";
-            decisions_struct[for_counter]['tag_name'] = "{{ tag.tag_name }}";
-            decisions_struct[for_counter]['question_text'] = "{{ tag.question_text }}";
-            decisions_struct[for_counter]['yes_or_no'] = 0;
-            for_counter++;
-        {% endfor %}
+    var decisions_struct = [];
+    var no_list = [];
+    var yes_list = [];
+    var for_counter = 0;
+    {% for tag in question_tags %}
+        decisions_struct[for_counter] = {};
+        decisions_struct[for_counter]['tag_id'] = "{{ tag.id }}";
+        decisions_struct[for_counter]['tag_name'] = "{{ tag.tag_name }}";
+        decisions_struct[for_counter]['question_text'] = "{{ tag.question_text }}";
+        decisions_struct[for_counter]['yes_or_no'] = 0;
+        for_counter++;
+    {% endfor %}
 
 	decisions[0] = decisions_struct[0]["question_text"];
 	decisions[1] = decisions_struct[1]["question_text"];
@@ -165,10 +171,11 @@
 					break;
 			}
 		}
+
 		current_id = question_id;
 		var question_string = "#" + question_id.toString();
 		$(question_string).animate({opacity:1},200);
-                var question_formatted = "Do you want to " + decisions[counter] + "?";
+        var question_formatted = "Do you want to " + decisions[counter] + "?";
 		$(question_string).text(question_formatted);
 
 		$("#status-label").animate({opacity:1},500, function() {
@@ -198,95 +205,102 @@
 				$("#status-label").removeClass('label-danger');
 			}
 			$("#swiper").hide();
-
 		}
 	}
-		$("#swiper").on("swipe", function(event, slick, direction) {
-			$(".option-text").animate({opacity:0},200).delay(200);
-			decider(direction);
-		});
 
-		function restart() {
-			location.reload();
-		}
+	$("#swiper").on("swipe", function(event, slick, direction) {
+		$(".option-text").animate({opacity:0},200).delay(200);
+		decider(direction);
+	});
 
-		function choose_activity() {
-			initMap(loc);
+	function restart() {
+		location.reload();
+	}
 
-			service = new google.maps.places.PlacesService(map);
+	function choose_activity() {
+		initMap(loc);
 
-			map.setCenter(loc);
+		service = new google.maps.places.PlacesService(map);
 
-			var request = {
-    			location: loc,
-    			radius: '1',
-    			query: activity_suggestion
-  			};
+		map.setCenter(loc);
 
-  			var places = [];
-  			var markers = [];
-  			var place;
-  			var marker;
+		var request = {
+			location: loc,
+			radius: '1',
+			query: activity_suggestion
+	    };
 
-  			service.textSearch(request, function callback(results, status) {
-  				if (status == google.maps.places.PlacesServiceStatus.OK) {
-    				for (var i = 0; i < results.length; i++) {
-      					place = results[i];
-      					places.push(place);
-      					marker = new google.maps.Marker({
-      						position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
-      						title: place['name'].toString(),
-      						map: map
-      					});
-      					markers.push(marker);
-    				}
-  				}	
-			});
+		var places = [];
+		var markers = [];
+		var place;
+		var marker;
 
-                        var ul = document.getElementById("places-list");
-                        for (var i = 0; i < places.length; i++) {
-                            var li = document.createElement("li");
-                            li.appendChild(document.createTextNode(places[i]['name'].toString()));
-                            ul.appendChild(li);
-                        }
-                        var search_string = "https://www.googleapis.com/customsearch/v1?q=" + activity_suggestion + "&cx=012308802730163756258%3Aoyksixjkzug&key=AIzaSyAXFoksr8v0CMETOiif8YlEFGa7dHHzVog"
-                        //$.get(search_string,function(data) {
-                        //    
-                        //});
-		}
-		
-      	function initMap(loc) {
-        	map = new google.maps.Map(document.getElementById('map'), {
-          	center: loc,
-          	zoom: 14
-        	});
-		}
-		$(document).ready(function() {
-			$("#suggest-row").hide();
-			var slickOpts = {
-        	slidesToShow: 1,
-        	slidesToScroll: 1,
-        	dots: false,
-        	prevArrow: '.btn-prev',
-        	nextArrow: '.btn-next',
-        	centerMode: true
-			};
-			$('.idunno-carousel').slick(slickOpts);
-			$("#1").text("Do you want to " + decisions[0] + "?");
-			$("#status-label").text("...swipe right for yes, left for no...");
-			$("#status-label").animate({opacity:1},500);
-			$("#progress").animate({opacity:1},500);
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(function(position) {
-  					loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-				});
+		service.textSearch(request, function callback(results, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				for (var i = 0; i < results.length; i++) {
+					place = results[i];
+					places.push(place);
+					marker = new google.maps.Marker({
+						position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
+						title: place['name'].toString(),
+						map: map
+					});
+					markers.push(marker);
+				}
 			}	
-			else {	
-				loc = new google.maps.LatLng(50,5);
-			}
-			$("#confirm-suggestion").on("click", choose_activity);
-			$("#restart").on("click", restart);
 		});
+
+        var ul = document.getElementById("places-list");
+        for (var i = 0; i < places.length; i++) {
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(places[i]['name'].toString()));
+            ul.appendChild(li);
+        }
+        var search_string = "https://www.googleapis.com/customsearch/v1?q=" + activity_suggestion + "&cx=012308802730163756258%3Aoyksixjkzug&key=AIzaSyAXFoksr8v0CMETOiif8YlEFGa7dHHzVog";
+        $.get(search_string,function(data) {
+        	var ul = document.getElementById("search-list");
+        	for (var i = 0; i < data['items'].length; i++) {
+           		var li = document.createElement("li");
+           		li.appendChild(document.createTextNode(places[i]['name'].toString()));
+           		ul.appendChild(li);
+       		}
+        });
+	}
+	
+  	function initMap(loc) {
+    	map = new google.maps.Map(document.getElementById('map'), {
+    	  	center: loc,
+      		zoom: 14
+    	});
+	}
+
+	$(document).ready(function() {
+		$("#suggest-row").hide();
+		var slickOpts = {
+    		slidesToShow: 1,
+    		slidesToScroll: 1,
+    		dots: false,
+    		prevArrow: '.btn-prev',
+    		nextArrow: '.btn-next',
+    		centerMode: true
+		};
+
+		$('.idunno-carousel').slick(slickOpts);
+		$("#1").text("Do you want to " + decisions[0] + "?");
+		$("#status-label").text("...swipe right for yes, left for no...");
+		$("#status-label").animate({opacity:1},500);
+		$("#progress").animate({opacity:1},500);
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+					loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+			});
+		}	
+		else {	
+			loc = new google.maps.LatLng(50,5);
+		}
+		$("#confirm-suggestion").on("click", choose_activity);
+		$("#restart").on("click", restart);
+	});
 	</script>
 	</body>
 </html>
