@@ -51,7 +51,7 @@ def get_activities(request):
         a = models.ActivityTag.objects.exclude(tag_id__in=no_list)
         b = a.filter(tag_id__in=yes_list)
         c = b.values('activity_id').annotate(total=Count('activity_id')).order_by('activity_id')
-        chosen_activity = models.Activity.objects.get(id=c[0].activty_id)
+        chosen_activity = models.Activity.objects.get(id=c[0].activity_id)
     if (chosen_activity == None):
         chosen_activity.activity_desc = "Hmmm, iDunno doesn't know..."
 
