@@ -76,6 +76,10 @@
 					</div>
 				</div>
 			</div>
+                        <div class="row">
+                        <ul id="places-list">
+                        </ul>
+                        </div>
 		</div>
 	<div id="map">
 	</div>
@@ -238,6 +242,13 @@
     				}
   				}	
 			});
+
+                        var ul = document.getElementById("places-list");
+                        for (var i = 0; i < places.length; i++) {
+                            var li = document.createElement("li");
+                            li.appendChild(document.createTextNode(places[i]['name'].toString()));
+                            ul.appendChild(li);
+                        }
 		}
 		
       	function initMap(loc) {
