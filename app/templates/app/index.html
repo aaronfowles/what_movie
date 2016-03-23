@@ -252,25 +252,26 @@
         var city = '';
         $.get(location_string, function(data) {
             for (var i = 0; i < data['results'][0]['address_components'].length; i++) {
-                    if(data['results'][0]['address_components'][i]['types'].indexOf('postal_town') >=  0) {
-                        city = data['results'][0]['address_components'][i]['long_name'];
-                        var search_string = "https://www.googleapis.com/customsearch/v1?q={" + $
-                        $.get(search_string,function(data) {
-                            for (var i = 0; i < data['items'].length; i++) {
-                                var id_string = "#" + i.toString() + "search";
-                                var $li = $("<li>",{id:id_string, class:"list-group-item"});
-                                $("#search-list").append($li);
-                                var t1 = $("<strong></strong>").text(data['items'][i]['title']);
-                                var t2 = $("<br>");
-                                var t3 = $("<a></a>",{href:data['items'][i]['link']}).text(data['items'][i]['link']);
-                                var t5 = $("<br>");
-                                var t4 = $("<span></span>").text(data['items'][i]['snippet']);
-                                $li.append(t1,t2,t4,t5,t3);
-                            }
-                        });
+                if(data['results'][0]['address_components'][i]['types'].indexOf('postal_town') >=  0) {
+                    city = data['results'][0]['address_components'][i]['long_name'];
+                    var search_string = "https://www.googleapis.com/customsearch/v1?q={" + $
+                    $.get(search_string,function(data) {
+                        for (var i = 0; i < data['items'].length; i++) {
+                            var id_string = "#" + i.toString() + "search";
+                            var $li = $("<li>",{id:id_string, class:"list-group-item"});
+                            $("#search-list").append($li);
+                            var t1 = $("<strong></strong>").text(data['items'][i]['title']);
+                            var t2 = $("<br>");
+                            var t3 = $("<a></a>",{href:data['items'][i]['link']}).text(data['items'][i]['link']);
+                            var t5 = $("<br>");
+                            var t4 = $("<span></span>").text(data['items'][i]['snippet']);
+                            $li.append(t1,t2,t4,t5,t3);
+                        }
+                    });
                 }
             }
-	});
+	    });
+	}
 	
   	function initMap(loc) {
     	map = new google.maps.Map(document.getElementById('map'), {
