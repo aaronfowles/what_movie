@@ -261,7 +261,7 @@
         	var ul = document.getElementById("search-list");
         	for (var i = 0; i < data['items'].length; i++) {
            		var li = document.createElement("li");
-           		li.appendChild(document.createTextNode(places[i]['name'].toString()));
+           		li.appendChild(document.createTextNode(data['items'][i]['title']);
            		ul.appendChild(li);
        		}
         });
