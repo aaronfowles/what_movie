@@ -66,6 +66,7 @@
 				<h2 style="text-align: center; margin:auto;"><span id="status-label" class="label label-info" style="text-align: center; margin:auto; display:table; height: 10%;"></span></h2>
 			</div>
 		</div>
+           <div class="container-fluid">
 		<div class="row" id="suggest-row">
 			<div style="text-align: center; margin:auto;">
 				<div id="suggestion-label" style="font-size: 200%;">
@@ -79,16 +80,13 @@
 					</div>
 			</div>
 		</div>
-        <div class="row">
-            <ul id="places-list">
-            </ul>
-        </div>
-	    <div class="row "id="map">
-	    </div>
 	    <div class="row">
-	    	<ul id="search-list">
+	    	<ul id="search-list" class="list-group">
 	    	</ul>
+        </div>
 	    </div>
+            <div class="row "id="map">
+            </div>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
 	$.mobile.autoInitializePage = false;
@@ -250,19 +248,13 @@
 			}	
 		});
 
-        var ul = document.getElementById("places-list");
-        for (var i = 0; i < places.length; i++) {
-            var li = document.createElement("li");
-            li.appendChild(document.createTextNode(places[i]['name'].toString()));
-            ul.appendChild(li);
-        }
         var search_string = "https://www.googleapis.com/customsearch/v1?q=" + activity_suggestion + "&cx=012308802730163756258%3Aoyksixjkzug&key=AIzaSyAXFoksr8v0CMETOiif8YlEFGa7dHHzVog";
         $.get(search_string,function(data) {
-        	var ul = document.getElementById("search-list");
         	for (var i = 0; i < data['items'].length; i++) {
-           		var li = document.createElement("li");
-           		li.appendChild(document.createTextNode(places[i]['name'].toString()));
-           		ul.appendChild(li);
+                        var id_string = "#" + i.toString() + "search";
+           		var $li = $("<li>",{id:id_string, class:"list-group-item"});
+                        $("#search-list").append($li);
+                        $li.text(data['items'][i]['title']);
        		}
         });
 	}
