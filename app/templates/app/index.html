@@ -227,7 +227,9 @@
 	}
 
 	function choose_activity() {
-        $("#suggest-row").animate({opacity: '0', height: '0px'},500);
+        $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {
+        	$("#suggest-row").hide();
+        });
         record_selection(1);
 		initMap(loc);
 
