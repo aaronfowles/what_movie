@@ -57,8 +57,10 @@ def get_activities(request):
         print("1" + str(chosen_activity))
     else:
         a = models.ActivityTag.objects.filter(activity_id__in=act_ids_to_select)
+        a2 = a.filter(tag_id__in=yes_list)
         print(a)
-        b = a.values('activity_id').annotate(total=Count('activity_id')).order_by('-total')
+        print(a2)
+        b = a2.values('activity_id').annotate(total=Count('activity_id')).order_by('-total')
         print(b)
         chosen_activity = models.Activity.objects.get(id=b[0]['activity_id'])
     if (chosen_activity == None):
@@ -83,5 +85,6 @@ def record_selection(request):
     no_string_list = models.Tag.objects.filter(id__in=no_string_list)
     no_string_list = [str(i) for i in no_string_list]
     no_string = ','.join(no_string_list)
-    selection = models.UserSelection.objects.create(outcome=req('outcome'),suggested_activity_id=req('activity'),lat=req('lat'),lng=req('lng'),yes_list=yes_string,no_list=no_string)
+    decision = True if req('outcome') == '1' else False
+    selection = models.UserSelection.objects.create(outcome=decision,suggested_activity_id=req('activity'),lat=req('lat'),lng=req('lng'),yes_list=yes_string,no_list=no_string)
     return JsonResponse({'status':'OK'})
