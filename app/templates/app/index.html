@@ -217,18 +217,18 @@
 		decider(direction);
 	});
 
-        function record_selection(choice) {
-		$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+    function record_selection(choice) {
+	$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
 
 	function restart() {
 		location.reload();
-                record_selection(0);
+        record_selection(0);
 	}
 
 	function choose_activity() {
-                $("#suggest-row").animate({opacity: '0', height: '0px'},500);
-                record_selection(1);
+        $("#suggest-row").animate({opacity: '0', height: '0px'},500);
+        record_selection(1);
 		initMap(loc);
 
 		service = new google.maps.places.PlacesService(map);
@@ -256,9 +256,9 @@
 						title: place['name'].toString(),
 						map: map
 					});
-                                        google.maps.event.addListener(marker, 'click', function() { 
-        					infowindow.setContent(this.title);
-                                                infowindow.open(map,this);
+                    google.maps.event.addListener(marker, 'click', function() { 
+        				infowindow.setContent(this.title);
+                    	infowindow.open(map,this);
 					});
 					markers.push(marker);
 				}
@@ -290,16 +290,17 @@
                         }
                     });
                 }
-	    }
-	});
+	    	}
+		});
+	}
 	
   	function initMap(loc) {
-    		map = new google.maps.Map(document.getElementById('map'), {
-    	  		center: loc,
-      			zoom: 14
-    		});
+    	map = new google.maps.Map(document.getElementById('map'), {
+    	  	center: loc,
+      		zoom: 14
+    	});
 		infowindow = new google.maps.InfoWindow({
-    			content: ''
+    		content: ''
   		});
 	}
 
