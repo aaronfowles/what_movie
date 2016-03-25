@@ -27,6 +27,11 @@ def get_activities(request):
 
     no_list = no_list.split(',')
     yes_list = yes_list.split(',')
+    if no_list[0] == '':
+        no_list = [1,2]
+    if yes_list[0] == '':
+        yes_list = [3,4]
+    print(no_list)
 
     all_act_tags = models.ActivityTag.objects.all()
     acts_to_exclude = all_act_tags.filter(tag_id__in=no_list)
@@ -40,18 +45,22 @@ def get_activities(request):
         act_ids_to_prefer.append(act.activity_id.id)
 
     act_ids_to_remove = set(act_ids_to_prefer).intersection(act_ids_to_exclude)
-    
+    print(str(act_ids_to_remove))
     act_ids_to_select = [i for i in act_ids_to_prefer if i not in act_ids_to_remove]
+    print(str(act_ids_to_select))
     chosen_activity = None
     if (len(act_ids_to_select) == 0):
         chosen_activity = models.Activity.objects.exclude(id__in=act_ids_to_exclude)[0]
+        print("0" + str(chosen_activity))
     elif (len(act_ids_to_select) == 1):
         chosen_activity = models.Activity.objects.filter(id__in=act_ids_to_select)[0]
+        print("1" + str(chosen_activity))
     else:
-        a = models.ActivityTag.objects.exclude(tag_id__in=no_list)
-        b = a.filter(tag_id__in=yes_list)
-        c = b.values('activity_id').annotate(total=Count('activity_id')).order_by('activity_id')
-        chosen_activity = models.Activity.objects.get(id=c[0]['activity_id'])
+        a = models.ActivityTag.objects.filter(activity_id__in=act_ids_to_select)
+        print(a)
+        b = a.values('activity_id').annotate(total=Count('activity_id')).order_by('-total')
+        print(b)
+        chosen_activity = models.Activity.objects.get(id=b[0]['activity_id'])
     if (chosen_activity == None):
         chosen_activity.activity_desc = "Hmmm, iDunno doesn't know..."
 
@@ -59,4 +68,20 @@ def get_activities(request):
     context['activity_name'] = chosen_activity.activity_name
     context['search_term'] = chosen_activity.search_term
     context['activity_desc'] = chosen_activity.activity_desc
+    context['places_term'] = chosen_activity.places_term
     return JsonResponse(context)
+
+
+# Record selection
+def record_selection(request):
+    req = request.GET.get
+    yes_string_list = req('yes_list').split(',')
+    yes_string_list = models.Tag.objects.filter(id__in=yes_string_list)
+    yes_string_list = [str(i) for i in yes_string_list]
+    yes_string = ','.join(yes_string_list) 
+    no_string_list = req('no_list').split(',')
+    no_string_list = models.Tag.objects.filter(id__in=no_string_list)
+    no_string_list = [str(i) for i in no_string_list]
+    no_string = ','.join(no_string_list)
+    selection = models.UserSelection.objects.create(outcome=req('outcome'),suggested_activity_id=req('activity'),lat=req('lat'),lng=req('lng'),yes_list=yes_string,no_list=no_string)
+    return JsonResponse({'status':'OK'})

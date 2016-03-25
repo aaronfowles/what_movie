@@ -90,6 +90,8 @@
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
 	$.mobile.autoInitializePage = false;
+        var places_term = "";
+        var activity_id = "";
     var activity_suggestion = "";
 	var map;
 	var service;
@@ -194,7 +196,9 @@
                             function(res) {
                                 $("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
                                 $("#confirm-suggestion").text(res['activity_desc'])
-                                activity_suggestion = res['activity_name'];
+                                activity_suggestion = res['search_term'];
+                                activity_id = res['activity_id']
+                                places_term = res['places_term'];
                             }
                         );
 			if (direction == 'right') {
@@ -211,11 +215,17 @@
 		decider(direction);
 	});
 
+        function record_selection(choice) {
+		$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+	}
+
 	function restart() {
 		location.reload();
+                record_selection(0);
 	}
 
 	function choose_activity() {
+                record_selection(1);
 		initMap(loc);
 
 		service = new google.maps.places.PlacesService(map);
@@ -225,7 +235,7 @@
 		var request = {
 			location: loc,
 			radius: '1',
-			query: activity_suggestion
+			query: places_term
 	    };
 
 		var places = [];
@@ -250,11 +260,15 @@
 
         var location_string = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + loc['lat']() + "," + loc['lng']() + "&key=" + "AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg";
         var city = '';
+        var country = '';
         $.get(location_string, function(data) {
-            for (var i = 0; i < data['results'][0]['address_components'].length; i++) {
+            for (var i = data['results'][0]['address_components'].length - 1; i >= 0; i--) {
+                if (data['results'][0]['address_components'][i]['types'].indexOf('country') >= 0) {
+                    country = data['results'][0]['address_components'][i]['long_name'];
+                }
                 if(data['results'][0]['address_components'][i]['types'].indexOf('postal_town') >=  0) {
-                    city = data['results'][0]['address_components'][i]['long_name'];
-                    var search_string = "https://www.googleapis.com/customsearch/v1?q={" + $
+                    city += " " + data['results'][0]['address_components'][i]['long_name'];
+                    var search_string = "https://www.googleapis.com/customsearch/v1?q={" + city + "," + country + "," + activity_suggestion + "}&cx=" + "012308802730163756258:oyksixjkzug" + "&key=AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg"
                     $.get(search_string,function(data) {
                         for (var i = 0; i < data['items'].length; i++) {
                             var id_string = "#" + i.toString() + "search";
