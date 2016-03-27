@@ -9,9 +9,14 @@
 	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.css"/>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	<style type="text/css">
+.slick-list {
+	height:100%;
+	width:100%;
+}
 		.idunno-carousel {
     background: #4080bf;
     height: 100%;
+    width: 100%;
 	}
 		p {
 	font-size: 500%;
@@ -20,12 +25,7 @@
 	vertical-align: middle;
 	padding-top: 10%;
 	padding-bottom: 10%;
-		}
-		#status-label {
-			font-size: 100%;
-			color: #ffffff;
-			width: 100%;
-		}
+	}
 
 		h1 {
 			font-size: 500%;
@@ -38,31 +38,24 @@
 	</style>
 	</head>
 	<body>
-		<div class="row">
-			<div class="col-md-12" style="align-self: middle">
-				<h1>iDunno</h1>
-			</div>
-		</div>
-		<div class="row" id="progress-row">
+		<div class="row" id="progress-row" style="height: 1%">
 			<progress id="progress" value="0" max="100" style="width: 100%;"></progress>
 		</div>
-		<div class="row" style="height: 70%;">
-			<div class="idunno-carousel" id="swiper">
-				<div>
+		<div class="row" style="height: 85%;">
+			<div class="idunno-carousel" id="swiper"">
+				<div id ="slab1">
 					<p class="option-text" id="1"></p>
 				</div>
-				<div>
+				<div id="slab2">
 					<p class="option-text" id="2"></p>
 				</div>
-				<div>
+				<div id="slab3">
 					<p class="option-text" id="3"></p>
 				</div>
 			</div>
 		</div>
-		<div class="row" id="status-row" style="height: 20%;">
-			<div>
-				<h2 style="text-align: center; margin:auto;"><span id="status-label" class="label label-info" style="text-align: center; margin:auto; display:table; height: 10%"></span></h2>
-			</div>
+		<div class="row status-row" style="height: 16%; text-align: center; margin-right: -15px; margin-left: -15px;">
+                	<div id="status-label" class="col-sm-12 label label-info" style="height: 100%; width:100%; font-size:400%;"></div>
 		</div>
         <div class="container-fluid">
 			<div class="row" id="suggest-row">
@@ -109,10 +102,26 @@
         decisions_struct[for_counter] = {};
         decisions_struct[for_counter]['tag_id'] = "{{ tag.id }}";
         decisions_struct[for_counter]['tag_name'] = "{{ tag.tag_name }}";
-        decisions_struct[for_counter]['question_text'] = "{{ tag.question_text }}";
+        decisions_struct[for_counter]['question_text'] = "{{ tag.question_text }}";;
         decisions_struct[for_counter]['yes_or_no'] = 0;
         for_counter++;
     {% endfor %}
+    var image_urls = {};
+    {% for k,v in image_url.items %}
+            image_urls["{{k}}"] = "{{v}}"; 
+    {% endfor %}
+
+    for_counter = 0;
+    for (var key in image_urls) {
+        alert(key);
+        for (var i = 0; i < 5; i++) {
+        	if (decisions_struct[i]["tag_id"].toString() == key.toString()) {
+			decisions_struct[i]["image_url"] = image_urls[key];
+                        alert(decisions_struct[i]["image_url"]);
+                	break;
+        	}
+	}
+    }
 
 	decisions[0] = decisions_struct[0]["question_text"];
 	decisions[1] = decisions_struct[1]["question_text"];
@@ -126,7 +135,7 @@
 		$("#progress").attr('value',new_prog); 
 		$("#status-label").removeClass('label-info');
 		if (direction=="right") {
-			$("#status-label").text("Yes :)");
+			$("#status-label").text("Yes");
                         yes_list.push(decisions_struct[counter-1]['tag_id']);
                         decisions_struct[counter-1]['yes_or_no'] = 1;
 			$("#status-label").addClass('label label-success');
@@ -148,7 +157,7 @@
 					break;
 			}
 		} else if(direction == "left") {
-			$("#status-label").text("No :(");
+			$("#status-label").text("No");
                         no_list.push(decisions_struct[counter-1]['tag_id']);
                         decisions_struct[counter-1]['yes_or_no'] = 0;
 			$("#status-label").addClass('label label-danger');
@@ -173,9 +182,12 @@
 
 		current_id = question_id;
 		var question_string = "#" + question_id.toString();
+                var image_string = "#" + "slab" + question_id.toString();
 		$(question_string).animate({opacity:1},200);
         var question_formatted = "Do you want to " + decisions[counter] + "?";
 		$(question_string).text(question_formatted);
+                var url_string = 'url(' + decisions_struct[question_id.toString()]["image_url"] + ')';
+                $(image_string).css("background-image",url_string);
 
 		$("#status-label").animate({opacity:1},500, function() {
 			$(this).animate({opacity:0},1000, function() {
@@ -188,7 +200,7 @@
 			$("#swiper").animate({opacity:'0',height:'0px'},500);
                         $("#swiper").parent().animate({opacity:'0',height:'0px'},500);
 			$("#progress-row").animate({opacity:0, height:'0px'},500);
-			$("#status-row").hide();
+			$(".status-row").hide();
 			$("#suggest-row").show();
 			$("#suggest-row").animate({opacity:1},500);
                         $.get("http://idunno.io:80/api/get_activities",
@@ -213,7 +225,7 @@
 
 	$("#swiper").on("swipe", function(event, slick, direction) {
 		$(".option-text").animate({opacity:0},200).delay(200);
-                $("#status-row").show();
+                $(".status-row").show();
 		decider(direction);
 	});
 
@@ -227,9 +239,7 @@
 	}
 
 	function choose_activity() {
-        $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {
-        	$("#suggest-row").hide();
-        });
+        $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
         record_selection(1);
 		initMap(loc);
 
@@ -310,7 +320,6 @@
 		$("#suggest-row").hide();
 		var slickOpts = {
     		slidesToShow: 1,
-    		slidesToScroll: 1,
     		dots: false,
     		prevArrow: '.btn-prev',
     		nextArrow: '.btn-next',
