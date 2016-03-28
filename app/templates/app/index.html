@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+        <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet' type='text/css'>
 	<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
 	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 	<script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
@@ -14,26 +15,24 @@
 	width:100%;
 }
 		.idunno-carousel {
-    background: #4080bf;
     height: 100%;
     width: 100%;
 	}
-		p {
-	font-size: 500%;
+.option-text {
+	font-size: 10em
+}
+		h1 {
 	color: #ffffff;
 	text-align: center;
 	vertical-align: middle;
-	padding-top: 10%;
-	padding-bottom: 10%;
+	text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;  
+        -webkit-text-stroke: 1px #000;
 	}
-
-		h1 {
-			font-size: 500%;
-		}
 		html, body, #map {
     		margin:0;
     		padding:0;
     		height: 100%;
+		font-family: 'Josefin Sans', sans-serif;
 		}
 	</style>
 	</head>
@@ -41,32 +40,36 @@
 		<div class="row" id="progress-row" style="height: 1%">
 			<progress id="progress" value="0" max="100" style="width: 100%;"></progress>
 		</div>
-		<div class="row" style="height: 85%;">
+		<div class="row" style="height: 60%;">
 			<div class="idunno-carousel" id="swiper"">
 				<div id ="slab1">
-					<p class="option-text" id="1"></p>
+					<h1 class="option-text" id="1"></h1>
 				</div>
 				<div id="slab2">
-					<p class="option-text" id="2"></p>
+					<h1 class="option-text" id="2"></h1>
 				</div>
 				<div id="slab3">
-					<p class="option-text" id="3"></p>
+					<h1 class="option-text" id="3"></h1>
 				</div>
 			</div>
 		</div>
-		<div class="row status-row" style="height: 16%; text-align: center; margin-right: -15px; margin-left: -15px;">
-                	<div id="status-label" class="col-sm-12 label label-info" style="height: 100%; width:100%; font-size:400%;"></div>
+		<div id="decider-row" class="row" style="height: 25%">
+			<div class="col-sm-offset-2 col-sm-8" style="height:100%; font-size:13.0em; align-items: center;">
+				<span id="deny" style="float:left; height:100%;  text-align: center; position: relative; top: 50%; -webkit-transform: translateY(-50%); -o-transform: translateY(-50%); transform: translateY(-50%);" class="glyphicon glyphicon-remove-circle"></span>
+				<span id="accept" style="float:right; height: 100%;" class="glyphicon glyphicon-ok-circle"></span>
+			</div>
 		</div>
-        <div class="container-fluid">
+		<div class="row status-row" style="height: 10%; text-align: center; margin-right: -15px; margin-left: -15px;">
+                        <h1 id="status-label" class="col-sm-12 label label-info" style="height: 100%; width:100%; font-size:4.0em; margin:0; padding:0; vertical-align: middle;">
+                </div>
 			<div class="row" id="suggest-row">
 				<div style="text-align: center; margin:auto;">
-					<div id="suggestion-label" style="font-size: 200%;">
-					</div>
-					<div class="col-sm-6 col-sm-offset-3" id="suggestion-options">
-						<div style="line-height: 75px; height: 100px; margin-top:40px; margin-bottom:40px;" id="confirm-suggestion" class="button btn-success btn-lg">
+					<h1 id="suggestion-label" style="font-size: 7.0em;">
+					</h1>
+					<div class="col-sm-offset-2 col-sm-8" style="height:100%; vertical-align:middle; font-size: 15em;" id="suggestion-options">
+						<div id="restart" style="float:left; height:100%;" class="glyphicon glyphicon-remove-circle">
 						</div>
-						<div style="line-height: 75px; height: 100px; margin-top: 40px; margin-bottom: 40px;" id="restart" class="button btn-info btn-lg">
-							<h3>Start again</h3>
+						<div id="confirm-suggestion" style="float:right; height: 100%;" class="glyphicon glyphicon-ok-circle">
 						</div>
 					</div>
 				</div>
@@ -75,7 +78,6 @@
 	    		<ul id="search-list" class="list-group">
 	    		</ul>
         	</div>
-	    </div>
         <div class="row "id="map">
         </div>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
@@ -113,11 +115,9 @@
 
     for_counter = 0;
     for (var key in image_urls) {
-        alert(key);
         for (var i = 0; i < 5; i++) {
         	if (decisions_struct[i]["tag_id"].toString() == key.toString()) {
 			decisions_struct[i]["image_url"] = image_urls[key];
-                        alert(decisions_struct[i]["image_url"]);
                 	break;
         	}
 	}
@@ -186,9 +186,10 @@
 		$(question_string).animate({opacity:1},200);
         var question_formatted = "Do you want to " + decisions[counter] + "?";
 		$(question_string).text(question_formatted);
-                var url_string = 'url(' + decisions_struct[question_id.toString()]["image_url"] + ')';
-                $(image_string).css("background-image",url_string);
-
+                if (counter != 5) {
+                	var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
+                        $("#swiper").css({"background-image": url_string});
+		}
 		$("#status-label").animate({opacity:1},500, function() {
 			$(this).animate({opacity:0},1000, function() {
 				$(this).removeClass('label-success');
@@ -200,6 +201,7 @@
 			$("#swiper").animate({opacity:'0',height:'0px'},500);
                         $("#swiper").parent().animate({opacity:'0',height:'0px'},500);
 			$("#progress-row").animate({opacity:0, height:'0px'},500);
+                        $("#decider-row").animate({opacity:0, height:'0px'},500);
 			$(".status-row").hide();
 			$("#suggest-row").show();
 			$("#suggest-row").animate({opacity:1},500);
@@ -207,8 +209,6 @@
                             {'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
                             function(res) {
                                 $("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
-                                var to_append = "<h3>" + res['activity_desc']+ "</h3>"
-                                $("#confirm-suggestion").append(to_append)
                                 activity_suggestion = res['search_term'];
                                 activity_id = res['activity_id']
                                 places_term = res['places_term'];
@@ -228,6 +228,19 @@
                 $(".status-row").show();
 		decider(direction);
 	});
+
+        $("#accept").on("click", function(event,slick) {
+		$(".option-text").animate({opacity:0},200).delay(200);
+                $(".status-row").show();
+		decider("right");
+	});
+
+	$("#deny").on("click", function(event,slick) {
+                $(".option-text").animate({opacity:0},200).delay(200);
+                $(".status-row").show();
+                decider("left");
+        });
+
 
     function record_selection(choice) {
 	$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
@@ -293,12 +306,14 @@
                             var id_string = "#" + i.toString() + "search";
                             var $li = $("<li>",{id:id_string, class:"list-group-item"});
                             $("#search-list").append($li);
+                            var $a = $("<a></a>",{href:data['items'][i]['link']});
                             var t1 = $("<strong></strong>").text(data['items'][i]['title']);
+                            $a.append(t1);
                             var t2 = $("<br>");
                             var t3 = $("<a></a>",{href:data['items'][i]['link']}).text(data['items'][i]['link']);
                             var t5 = $("<br>");
                             var t4 = $("<span></span>").text(data['items'][i]['snippet']);
-                            $li.append(t1,t2,t4,t5,t3);
+                            $li.append($a,t2,t4);
                         }
                     });
                 }
@@ -317,18 +332,20 @@
 	}
 
 	$(document).ready(function() {
+                var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
+                $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover"});
 		$("#suggest-row").hide();
 		var slickOpts = {
     		slidesToShow: 1,
     		dots: false,
-    		prevArrow: '.btn-prev',
-    		nextArrow: '.btn-next',
+    		prevArrow: '#accept',
+    		nextArrow: '#deny',
     		centerMode: true
 		};
 
 		$('.idunno-carousel').slick(slickOpts);
 		$("#1").text("Do you want to " + decisions[0] + "?");
-		$("#status-label").text("...swipe right for yes, left for no...");
+		$("#status-label").text("...left for no, right for yes...");
 		$("#status-label").animate({opacity:1},500);
 		$("#progress").animate({opacity:1},500);
 		if (navigator.geolocation) {
@@ -339,6 +356,7 @@
 		else {	
 			loc = new google.maps.LatLng(50,5);
 		}
+		$("#map").hide();
 		$("#confirm-suggestion").on("click", choose_activity);
 		$("#restart").on("click", restart);
 	});

@@ -20,20 +20,20 @@ def index(request):
     context['image_url'] = {}
     for i in range(0,5):
         context['question_tags'].append(all_tags[rand_selection[i]])
-        tags = [str(all_tags[rand_selection[i]]), 'greyscale']
+        tags = [str(all_tags[rand_selection[i]])]
         tag_string = ','.join(tags)
         payload = {'api_key': '63c1470d6730c8c27c06176060489644','tags':tag_string,'tag_mode':'any','media':'photos','format':'json','method':'flickr.photos.search'}
         res = requests.get('https://api.flickr.com/services/rest/?',params=payload)
+        print(payload)
         photo = res.text
         photo = photo[photo.index('{'):len(photo)-1]
         photo = json.loads(photo)
-        photo = photo['photos']['photo'][0]
+        photo = photo['photos']['photo'][randint(0,len(photo['photos']['photo'])-1)]
         farm_id = str(photo['farm'])
         server_id = str(photo['server'])
         id = str(photo['id'])
         secret = str(photo['secret'])
         image_url = 'https://farm' + farm_id + '.staticflickr.com/' + server_id + '/' + id + '_' + secret + '.jpg'
-        print(image_url)
         context['image_url'][str(all_tags[rand_selection[i]].id)] = image_url 
     return render(request, 'app/index.html', context)
 
