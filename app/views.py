@@ -24,7 +24,6 @@ def index(request):
         tag_string = ','.join(tags)
         payload = {'api_key': '63c1470d6730c8c27c06176060489644','tags':tag_string,'tag_mode':'any','media':'photos','format':'json','method':'flickr.photos.search'}
         res = requests.get('https://api.flickr.com/services/rest/?',params=payload)
-        print(payload)
         photo = res.text
         photo = photo[photo.index('{'):len(photo)-1]
         photo = json.loads(photo)
@@ -49,7 +48,6 @@ def get_activities(request):
         no_list = [1,2]
     if yes_list[0] == '':
         yes_list = [3,4]
-    print(no_list)
 
     all_act_tags = models.ActivityTag.objects.all()
     acts_to_exclude = all_act_tags.filter(tag_id__in=no_list)
@@ -63,23 +61,16 @@ def get_activities(request):
         act_ids_to_prefer.append(act.activity_id.id)
 
     act_ids_to_remove = set(act_ids_to_prefer).intersection(act_ids_to_exclude)
-    print(str(act_ids_to_remove))
     act_ids_to_select = [i for i in act_ids_to_prefer if i not in act_ids_to_remove]
-    print(str(act_ids_to_select))
     chosen_activity = None
     if (len(act_ids_to_select) == 0):
         chosen_activity = models.Activity.objects.exclude(id__in=act_ids_to_exclude)[0]
-        print("0" + str(chosen_activity))
     elif (len(act_ids_to_select) == 1):
         chosen_activity = models.Activity.objects.filter(id__in=act_ids_to_select)[0]
-        print("1" + str(chosen_activity))
     else:
         a = models.ActivityTag.objects.filter(activity_id__in=act_ids_to_select)
         a2 = a.filter(tag_id__in=yes_list)
-        print(a)
-        print(a2)
         b = a2.values('activity_id').annotate(total=Count('activity_id')).order_by('-total')
-        print(b)
         chosen_activity = models.Activity.objects.get(id=b[0]['activity_id'])
     if (chosen_activity == None):
         chosen_activity.activity_desc = "Hmmm, iDunno doesn't know..."

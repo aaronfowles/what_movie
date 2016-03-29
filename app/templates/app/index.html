@@ -40,7 +40,7 @@
 		<div class="row" id="progress-row" style="height: 1%">
 			<progress id="progress" value="0" max="100" style="width: 100%;"></progress>
 		</div>
-		<div class="row" style="height: 60%;">
+		<div class="row" style="height: 65%;">
 			<div class="idunno-carousel" id="swiper"">
 				<div id ="slab1">
 					<h1 class="option-text" id="1"></h1>
@@ -53,14 +53,14 @@
 				</div>
 			</div>
 		</div>
-		<div id="decider-row" class="row" style="height: 25%">
-			<div class="col-sm-offset-2 col-sm-8" style="height:100%; font-size:13.0em; align-items: center;">
-				<span id="deny" style="float:left; height:100%;  text-align: center; position: relative; top: 50%; -webkit-transform: translateY(-50%); -o-transform: translateY(-50%); transform: translateY(-50%);" class="glyphicon glyphicon-remove-circle"></span>
+		<div id="decider-row" class="row" style="height: 25%; padding: 5%;">
+			<div class="col-sm-offset-2 col-sm-8" style="height:100%; font-size:15.0em; align-items: center; top: 50%; -webkit-transform: translateY(-50%); -o-transform: translateY(-50%); transform: translateY(-50%);">
+				<span id="deny" style="float:left; height:100%;" class="glyphicon glyphicon-remove-circle"></span>
 				<span id="accept" style="float:right; height: 100%;" class="glyphicon glyphicon-ok-circle"></span>
 			</div>
 		</div>
-		<div class="row status-row" style="height: 10%; text-align: center; margin-right: -15px; margin-left: -15px;">
-                        <h1 id="status-label" class="col-sm-12 label label-info" style="height: 100%; width:100%; font-size:4.0em; margin:0; padding:0; vertical-align: middle;">
+		<div class="row status-row" style="height: 12%; text-align: center; margin-right: -25px; margin-left: -25px;">
+                        <h1 id="status-label" class="col-sm-12 label label-info" style="border-radius: 0px; height: 100%; width:100%; font-size:4.0em; margin:0; padding:0; padding-top: 1%; vertical-align: middle;">
                 </div>
 			<div class="row" id="suggest-row">
 				<div style="text-align: center; margin:auto;">
@@ -74,9 +74,17 @@
 					</div>
 				</div>
 			</div>
-	    	<div class="row">
-	    		<ul id="search-list" class="list-group">
-	    		</ul>
+	    	<div id="results-row" class="row col-sm-10 col-sm-offset-1">
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h2>Results</h2>
+					</div>
+					<div class="panel-body">
+	    					<ul id="search-list" class="list-group">
+	    					</ul>
+					</div>
+				</div>
+			</div>
         	</div>
         <div class="row "id="map">
         </div>
@@ -253,6 +261,7 @@
 
 	function choose_activity() {
         $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
+	$("#results-row").show();
         record_selection(1);
 		initMap(loc);
 
@@ -342,7 +351,7 @@
     		nextArrow: '#deny',
     		centerMode: true
 		};
-
+		$("#results-row").hide();
 		$('.idunno-carousel').slick(slickOpts);
 		$("#1").text("Do you want to " + decisions[0] + "?");
 		$("#status-label").text("...left for no, right for yes...");
