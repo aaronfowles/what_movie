@@ -37,6 +37,7 @@
 	</style>
 	</head>
 	<body>
+	<div id="overall" style="height:100%;">
 		<div class="row" id="progress-row" style="height: 1%">
 			<progress id="progress" value="0" max="100" style="width: 100%;"></progress>
 		</div>
@@ -77,7 +78,7 @@
 	    	<div id="results-row" class="row col-sm-10 col-sm-offset-1">
 			<div class="panel-group">
 				<div class="panel panel-default">
-					<div class="panel-heading"><h2>Results</h2>
+					<div class="panel-heading"><h2>Suggestions</h2>
 					</div>
 					<div class="panel-body">
 	    					<ul id="search-list" class="list-group">
@@ -86,8 +87,23 @@
 				</div>
 			</div>
         	</div>
-        <div class="row "id="map">
-        </div>
+		<div class="row col-sm-10 col-sm-offset-1" id="about">
+			<div class="panel-group">
+				<div class="panel-default">
+					<div class="panel-heading">
+						<h2>
+							<a data-toggle="collapse" href="#collapsebody">How does it work?</a>
+						</h2>
+					</div>
+					<div class="panel-collapse collapse" id="collapsebody">
+						<strong>Google for the indecisive</strong><br>iDunno uses the latest in *insert machine learning / data science buzzwords here* to help you avoid wasted hours sifting through events websites only to realise it is now too late to actually go out and do anything.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" id="map">
+        	</div>
+	</div>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
 	$.mobile.autoInitializePage = false;
@@ -262,6 +278,7 @@
 	function choose_activity() {
         $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
 	$("#results-row").show();
+	$("#about").show();
         record_selection(1);
 		initMap(loc);
 
@@ -341,9 +358,20 @@
 	}
 
 	$(document).ready(function() {
+		var pageWidth = $(window).width();
+		if (pageWidth > 1024) {
+			$("#overall").addClass("col-md-6 col-md-offset-3");
+			$("#accept").parent().css("font-size","10em");
+			$(".option-text").css("font-size","5em");
+			$("#decider-row").css("padding","1%");
+			$("#confirm-suggestion").parent().css("font-size","10em");
+			$("#suggestion-label").css("font-size","5em");
+
+		};
                 var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
-                $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover"});
+                $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
 		$("#suggest-row").hide();
+		$("#about").hide();
 		var slickOpts = {
     		slidesToShow: 1,
     		dots: false,
