@@ -38,7 +38,7 @@ class UserSelection(models.Model):
     lng = models.FloatField()
     yes_list = models.CharField(max_length=128)
     no_list = models.CharField(max_length=128)
-    #json_field = JSONField()
+    json_field = JSONField()
 
     def __str__(self):
         return str(self.datetime) + str(self.suggested_activity) + str(self.outcome)

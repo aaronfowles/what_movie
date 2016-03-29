@@ -1,0 +1,7 @@
+#!/root/Documents/projects/idunno/venv/bin/python
+
+import sys
+
+from bokeh.command.bootstrap import main
+
+main(sys.argv)
