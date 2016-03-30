@@ -27,13 +27,13 @@ def index(request):
         photo = res.text
         photo = photo[photo.index('{'):len(photo)-1]
         photo = json.loads(photo)
-        photo = photo['photos']['photo'][randint(0,len(photo['photos']['photo'])-1)]
-        farm_id = str(photo['farm'])
-        server_id = str(photo['server'])
-        id = str(photo['id'])
-        secret = str(photo['secret'])
-        image_url = 'https://farm' + farm_id + '.staticflickr.com/' + server_id + '/' + id + '_' + secret + '.jpg'
-        context['image_url'][str(all_tags[rand_selection[i]].id)] = image_url 
+        photo = photo["photos"]["photo"][randint(0,len(photo["photos"]["photo"])-1)]
+        farm_id = str(photo["farm"])
+        server_id = str(photo["server"])
+        id = str(photo["id"])
+        secret = str(photo["secret"])
+        image_url = "https://farm" + farm_id + ".staticflickr.com/" + server_id + "/" + id + "_" + secret + ".jpg"
+        context["image_url"][str(all_tags[rand_selection[i]].id)] = image_url 
     return render(request, 'app/index.html', context)
 
 def get_activities(request):
