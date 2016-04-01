@@ -104,6 +104,9 @@
 		float: right;
 		height: 100%;
 	}
+	#map {
+		width: 100%;
+	}
 	</style>
 	</head>
 	<body>
@@ -160,22 +163,35 @@
 				</div>
 			</div>
         </div>
+	<div class="row col-sm-10 col-sm-offset-1" id="nearby">
+                        <div class="panel-group">
+                                <div class="panel-default">
+                                        <div class="panel-heading">
+                                                <h2>
+                                                        <a data-toggle="collapse" href="#collapsenearby" id="nearby-click">Nearby</a>
+                                                </h2>
+                                        </div>
+                                        <div class="panel-collapse collapse" id="collapsenearby">
+                                                <div id="map">
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+        </div>
 		<div class="row col-sm-10 col-sm-offset-1" id="about">
 			<div class="panel-group">
 				<div class="panel-default">
 					<div class="panel-heading">
 						<h2>
-							<a data-toggle="collapse" href="#collapsebody">How does it work?</a>
+							<a data-toggle="collapse" href="#collapseabout">How does it work?</a>
 						</h2>
 					</div>
-					<div class="panel-collapse collapse" id="collapsebody">
+					<div class="panel-collapse collapse" id="collapseabout">
 						<strong>Google for the indecisive</strong><br>iDunno uses the latest in *insert machine learning / data science buzzwords here* to help you avoid wasted hours sifting through events websites only to realise it is now too late to actually go out and do anything.</p>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row" id="map">
-        </div>
 	</div>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
@@ -338,6 +354,46 @@
                 decider("left");
         });
 
+	$("#nearby-click").on("click", function() {
+		$("#map").css("height","800px");
+                $("#map").css("width","100%");
+		initMap(loc);
+
+                service = new google.maps.places.PlacesService(map);
+
+                map.setCenter(loc);
+
+                var request = {
+                        location: loc,
+                        radius: '1',
+                        query: places_term
+		};
+
+                var places = [];
+                var markers = [];
+                var place;
+                var marker;
+
+		service.textSearch(request, function callback(results, status) {
+                        if (status == google.maps.places.PlacesServiceStatus.OK) {
+                                for (var i = 0; i < results.length; i++) {
+                                        place = results[i];
+                                        places.push(place);
+                                        marker = new google.maps.Marker({
+                                                position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
+                                                title: place['name'].toString(),
+                                                map: map
+                                        });
+                    google.maps.event.addListener(marker, 'click', function() {
+                                        infowindow.setContent(this.title);
+                        infowindow.open(map,this);
+                                        });
+                                        markers.push(marker);
+                                }
+                        }
+                });
+	});
+
 
     function record_selection(choice) {
 	$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
@@ -351,43 +407,10 @@
 	function choose_activity() {
         $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
 	$("#results-row").show();
+	$("#map").show();
+	$("#nearby").show();
 	$("#about").show();
         record_selection(1);
-		initMap(loc);
-
-		service = new google.maps.places.PlacesService(map);
-
-		map.setCenter(loc);
-
-		var request = {
-			location: loc,
-			radius: '1',
-			query: places_term
-	    };
-
-		var places = [];
-		var markers = [];
-		var place;
-		var marker;
-
-		service.textSearch(request, function callback(results, status) {
-			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				for (var i = 0; i < results.length; i++) {
-					place = results[i];
-					places.push(place);
-					marker = new google.maps.Marker({
-						position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
-						title: place['name'].toString(),
-						map: map
-					});
-                    google.maps.event.addListener(marker, 'click', function() { 
-        				infowindow.setContent(this.title);
-                    	infowindow.open(map,this);
-					});
-					markers.push(marker);
-				}
-			}	
-		});
 
         var location_string = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + loc['lat']() + "," + loc['lng']() + "&key=" + "AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg";
         var city = '';
@@ -444,6 +467,7 @@
                 var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
                 $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
 		$("#suggest-row").hide();
+		$("#nearby").hide();
 		$("#about").hide();
 		var slickOpts = {
     		slidesToShow: 1,
