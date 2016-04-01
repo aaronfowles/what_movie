@@ -180,23 +180,31 @@
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
 	<script>
 	$.mobile.autoInitializePage = false;
-        var places_term = "";
-        var activity_id = "";
+    var activity_id = "";
     var activity_suggestion = "";
+
+    var places_term = "";
 	var map;
-        var infowindow;
+    var infowindow;
 	var service;
 	var loc;
+
 	var current_id = 1;
 	var question_id = 1;
 	var yes_id = 3;
 	var no_id = 2;
+
 	var counter = 0;
+
+	var image_urls = {};
+
 	var decisions = [];
     var decisions_struct = [];
     var no_list = [];
     var yes_list = [];
+
     var for_counter = 0;
+
     {% for tag in question_tags %}
         decisions_struct[for_counter] = {};
         decisions_struct[for_counter]['tag_id'] = "{{ tag.id }}";
@@ -205,19 +213,20 @@
         decisions_struct[for_counter]['yes_or_no'] = 0;
         for_counter++;
     {% endfor %}
-    var image_urls = {};
+
     {% for k,v in image_url.items %}
             image_urls["{{k}}"] = "{{v}}"; 
     {% endfor %}
 
     for_counter = 0;
+
     for (var key in image_urls) {
         for (var i = 0; i < 5; i++) {
         	if (decisions_struct[i]["tag_id"].toString() == key.toString()) {
-			decisions_struct[i]["image_url"] = image_urls[key];
-                	break;
+				decisions_struct[i]["image_url"] = image_urls[key];
+                break;
         	}
-	}
+		}
     }
 
 	decisions[0] = decisions_struct[0]["question_text"];
@@ -279,14 +288,16 @@
 
 		current_id = question_id;
 		var question_string = "#" + question_id.toString();
-                var image_string = "#" + "slab" + question_id.toString();
+        var image_string = "#" + "slab" + question_id.toString();
 		$(question_string).animate({opacity:1},200);
         var question_formatted = "Do you want to " + decisions[counter] + "?";
 		$(question_string).text(question_formatted);
-                if (counter != 5) {
-                	var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
-                        $("#swiper").css({"background-image": url_string});
-		}
+
+        if (counter != 5) {
+        	var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
+        	$("#swiper").css({"background-image": url_string});
+        }
+
 		$("#status-label").animate({opacity:1},500, function() {
 			$(this).animate({opacity:0},1000, function() {
 				$(this).removeClass('label-success');
@@ -296,21 +307,21 @@
 
 		if (counter == 5) {
 			$("#swiper").animate({opacity:'0',height:'0px'},500);
-                        $("#swiper").parent().animate({opacity:'0',height:'0px'},500);
+			$("#swiper").parent().animate({opacity:'0',height:'0px'},500);
 			$("#progress-row").animate({opacity:0, height:'0px'},500);
-                        $("#decider-row").animate({opacity:0, height:'0px'},500);
+			$("#decider-row").animate({opacity:0, height:'0px'},500);
 			$(".status-row").hide();
 			$("#suggest-row").show();
 			$("#suggest-row").animate({opacity:1},500);
-                        $.get("http://idunno.io:80/api/get_activities",
-                            {'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
-                            function(res) {
-                                $("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
-                                activity_suggestion = res['search_term'];
-                                activity_id = res['activity_id']
-                                places_term = res['places_term'];
-                            }
-                        );
+			$.get("http://idunno.io:80/api/get_activities",
+				{'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
+				function(res) {
+					$("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
+					activity_suggestion = res['search_term'];
+					activity_id = res['activity_id']
+					places_term = res['places_term'];
+				}
+			);
 			if (direction == 'right') {
 				$("#status-label").removeClass('label-success');
 			} else {
@@ -322,25 +333,24 @@
 
 	$("#swiper").on("swipe", function(event, slick, direction) {
 		$(".option-text").animate({opacity:0},200).delay(200);
-                $(".status-row").show();
+		$(".status-row").show();
 		decider(direction);
 	});
 
-        $("#accept").on("click", function(event,slick) {
+	$("#accept").on("click", function(event,slick) {
 		$(".option-text").animate({opacity:0},200).delay(200);
-                $(".status-row").show();
+		$(".status-row").show();
 		decider("right");
 	});
 
 	$("#deny").on("click", function(event,slick) {
-                $(".option-text").animate({opacity:0},200).delay(200);
-                $(".status-row").show();
-                decider("left");
-        });
-
+		$(".option-text").animate({opacity:0},200).delay(200);
+		$(".status-row").show();
+		decider("left");
+	});
 
     function record_selection(choice) {
-	$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+		$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
 
 	function restart() {
@@ -350,8 +360,8 @@
 
 	function choose_activity() {
         $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
-	$("#results-row").show();
-	$("#about").show();
+        $("#results-row").show();
+        $("#about").show();
         record_selection(1);
 		initMap(loc);
 
