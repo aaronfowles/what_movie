@@ -360,7 +360,6 @@
 	});
 
 	$("#deny").on("click", function(event,slick) {
-<<<<<<< HEAD
                 $(".option-text").animate({opacity:0},200).delay(200);
                 $(".status-row").show();
                 decider("left");
@@ -406,13 +405,6 @@
                 });
 	});
 
-=======
-		$(".option-text").animate({opacity:0},200).delay(200);
-		$(".status-row").show();
-		decider("left");
-	});
->>>>>>> 950985965442418cf8d7ae3fa87f6e4a186843da
-
     function record_selection(choice) {
 		$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
@@ -424,15 +416,10 @@
 
 	function choose_activity() {
         $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
-<<<<<<< HEAD
 	$("#results-row").show();
 	$("#map").show();
 	$("#nearby").show();
 	$("#about").show();
-=======
-        $("#results-row").show();
-        $("#about").show();
->>>>>>> 950985965442418cf8d7ae3fa87f6e4a186843da
         record_selection(1);
 
         var location_string = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + loc['lat']() + "," + loc['lng']() + "&key=" + "AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg";
