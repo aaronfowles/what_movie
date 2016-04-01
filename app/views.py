@@ -97,3 +97,10 @@ def record_selection(request):
     decision = True if req('outcome') == '1' else False
     selection = models.UserSelection.objects.create(outcome=decision,suggested_activity_id=req('activity'),lat=req('lat'),lng=req('lng'),yes_list=yes_string,no_list=no_string)
     return JsonResponse({'status':'OK'})
+
+# Database amend view
+def database(request):
+    context = {}
+    context['tags'] = models.Tag.objects.all()
+    context['activities'] = models.Activity.objects.all()
+    return render(request,'database.html',context)

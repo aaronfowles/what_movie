@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>Add content...
+</h1>
+	<h2>Add Activity
+	</h2>
+	<form class="form-horizontal">
+	<fieldset>
+	<legend>Activity
+	</legend>
+	<div class="form-group">
+  		<label class="col-md-4 control-label" for="activity_name">Activity Name</label>  
+  		<div class="col-md-4">
+  			<input id="activity_name" name="activity_name" type="text" placeholder="" class="form-control input-md" required="">
+		</div>
+	</div>
+	<div class="form-group">
+  		<label class="col-md-4 control-label" for="search_term">Search Term</label>  
+  		<div class="col-md-4">
+  			<input id="search_term" name="search_term" type="text" placeholder="" class="form-control input-md" required="">
+    
+  		</div>
+	</div>
+	<div class="form-group">
+  		<label class="col-md-4 control-label" for="places_term">Places Term</label>  
+  		<div class="col-md-4">
+  			<input id="places_term" name="places_term" type="text" placeholder="" class="form-control input-md">
+  			<span class="help-block">Text used to search Places</span>  
+  		</div>
+	</div>
+	<div class="form-group">
+  		<label class="col-md-4 control-label" for="activity_desc">Activity Description</label>  
+  		<div class="col-md-4">
+  			<input id="activity_desc" name="activity_desc" type="text" placeholder="" class="form-control input-md" required="">
+  			<span class="help-block">iDunno thinks you should...</span>  
+  		</div>
+	</div>
+	<div class="form-group">
+  		<label class="col-md-4 control-label" for="tags">Tags</label>
+  		<div class="col-md-4">
+    			<select id="tags" name="tags" class="form-control" multiple="multiple">
+    			</select>
+  		</div>
+	</div>
+	<div class="form-group">
+  		<label class="col-md-4 control-label" for="submit"></label>
+  		<div class="col-md-4">
+    			<button id="submit" name="submit" class="btn btn-primary">Add</button>
+  		</div>
+	</div>
+</fieldset>
+{% csrf_token %}
+</form>
+<h2>Add Tag
+</h2>
+<form>
+<form class="form-horizontal">
+<fieldset>
+<legend>Tag</legend>
+<div class="form-group">
+	<label class="col-md-4 control-label" for="tag_name">Tag Name</label>  
+	<div class="col-md-4">
+  		<input id="tag_name" name="tag_name" type="text" placeholder="" class="form-control input-md" required="">
+    
+  	</div>
+</div>
+<div class="form-group">
+	<label class="col-md-4 control-label" for="question_text">Question Text</label>  
+	<div class="col-md-4">
+		<input id="question_text" name="question_text" type="text" placeholder="" class="form-control input-md" required="">
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-md-4 control-label" for="activities">Activities</label>
+	<div class="col-md-4">
+		<select id="activities" name="activities" class="form-control" multiple="multiple">
+		</select>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-md-4 control-label" for="submit"></label>
+	<div class="col-md-4">
+    		<button id="submit" name="submit" class="btn btn-primary">Add</button>
+	</div>
+</div>
+</fieldset>
+{% csrf_token %}
+</form>
+</body>
+</html>
