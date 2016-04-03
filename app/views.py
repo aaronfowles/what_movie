@@ -103,4 +103,13 @@ def database(request):
     context = {}
     context['tags'] = models.Tag.objects.all()
     context['activities'] = models.Activity.objects.all()
-    return render(request,'database.html',context)
+    return render(request,'app/database.html',context)
+
+def add_activity(request):
+    context = {}
+    req = request.POST.get
+    return JsonResponse(context)
+
+def add_tag(request):
+    context = {}
+    return JsonResponse(context)
