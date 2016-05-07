@@ -154,9 +154,12 @@
 	    <div class="row col-sm-10 col-sm-offset-1" id="results-row" >
 			<div class="panel-group">
 				<div class="panel panel-default">
-					<div class="panel-heading"><h2>Suggestions</h2>
+					<div class="panel-heading">
+						<h2>
+							<a data-toggle="collapse" href="#collapsesuggestions" id="suggestions-click">Suggestions</a>
+						</h2>
 					</div>
-					<div class="panel-body">
+					<div class="panel-collapse collapse" id="collapsesuggestions">
 	    					<ul id="search-list" class="list-group">
 	    					</ul>
 					</div>
@@ -390,9 +393,24 @@
                                 for (var i = 0; i < results.length; i++) {
                                         place = results[i];
                                         places.push(place);
+					defined_places_attr = {};
+					defined_places_attr['name'] = place['name'].toString();
+					if (place['icon'] != undefined) {
+						defined_places_attr['icon'] = place['icon'].toString();
+					}
+					if (place['website'] != undefined) {
+                                                defined_places_attr['website'] = place['website'].toString();
+                                        }
+					if (place['rating'] != undefined) {
+                                                defined_places_attr['rating'] = place['rating'].toString();
+                                        }
+					var title_string = "";
+					for (var i in defined_places_attr) {
+						title_string += '<strong>' + i.toString() + '</strong>: ' + defined_places_attr[i] + '. '; 
+					}
                                         marker = new google.maps.Marker({
                                                 position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
-                                                title: place['name'].toString(),
+                                                title: title_string,
                                                 map: map
                                         });
                     google.maps.event.addListener(marker, 'click', function() {
@@ -435,6 +453,7 @@
                     var search_string = "https://www.googleapis.com/customsearch/v1?q={" + city + "," + country + "," + activity_suggestion + "}&cx=" + "012308802730163756258:oyksixjkzug" + "&key=AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg"
                     $.get(search_string,function(data) {
                         for (var i = 0; i < data['items'].length; i++) {
+			    console.log("Got the search results...")
                             var id_string = "#" + i.toString() + "search";
                             var $li = $("<li>",{id:id_string, class:"list-group-item"});
                             $("#search-list").append($li);
@@ -496,6 +515,9 @@
 			navigator.geolocation.getCurrentPosition(function(position) {
 					loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			});
+                    if (loc == undefined) {
+			loc = new google.maps.LatLng(50,5);
+		    }
 		}	
 		else {	
 			loc = new google.maps.LatLng(50,5);

@@ -41,7 +41,7 @@
 	<div class="form-group">
   		<label class="col-md-4 control-label" for="tags">Tags</label>
   		<div class="col-md-4">
-    			<select id="tags" name="tags" class="form-control" multiple="multiple">
+    			<select id="tags" name="tags[]" class="form-control" multiple="multiple">
 			{% for tag in tags %}
 				<option value="{{tag.id}}">{{tag.tag_name}}</option>
 			{% endfor %}
@@ -78,7 +78,7 @@
 <div class="form-group">
 	<label class="col-md-4 control-label" for="activities">Activities</label>
 	<div class="col-md-4">
-		<select id="activities" name="activities" class="form-control" multiple="multiple">
+		<select id="activities" name="activities[]" class="form-control" multiple="multiple">
 		{% for activity in activities %}
                 	<option value="{{activity.id}}">{{activity.activity_name}}</option>
                 {% endfor %}

@@ -113,7 +113,7 @@ def add_activity(request):
     places_term = req('places_term')
     activity_desc = req('activity_desc')
     created_activity = models.Activity.objects.create(activity_name=activity_name,search_term=search_term,places_term=places_term,activity_desc=activity_desc)
-    tag_list = req('tags')
+    tag_list = request.POST.getlist('tags[]')
     for i in tag_list:
         tag_id = models.Tag.objects.get(id=i)
         act_tag = models.ActivityTag.objects.create(activity_id=created_activity,tag_id=tag_id)    
@@ -125,7 +125,7 @@ def add_tag(request):
     tag_name = req('tag_name')
     question_text = req('question_text')
     created_tag = models.Tag.objects.create(tag_name=tag_name,question_text=question_text)
-    activity_list = req('activities')
+    activity_list = request.POST.getlist('activities[]')
     for i in activity_list:
         activity_id = models.Activity.objects.get(id=i)
         act_tag = models.ActivityTag.objects.create(activity_id=activity_id,tag_id=created_tag)
