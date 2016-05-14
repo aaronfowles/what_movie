@@ -3,7 +3,7 @@
 	<head>
         <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet' type='text/css'>
 	<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
-	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 	<script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
 	<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.min.js"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -28,6 +28,9 @@
 		font-family: Arial;
 		font-weight: 900;
 		text-shadow: 0px 0px 50px #000;
+	}
+	h2 {
+		font-size: 2em;
 	}
 	html, body, #map {
     	margin:0;
@@ -151,7 +154,7 @@
 				</div>
 			</div>
 		</div>
-	    <div class="row col-sm-10 col-sm-offset-1" id="results-row" >
+	    <div class="row col-sm-12" id="results-row" style="font-size:2em">
 			<div class="panel-group">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -166,7 +169,7 @@
 				</div>
 			</div>
         </div>
-	<div class="row col-sm-10 col-sm-offset-1" id="nearby">
+	<div class="row col-sm-12" id="nearby" style="font-size:2em">
                         <div class="panel-group">
                                 <div class="panel-default">
                                         <div class="panel-heading">
@@ -181,7 +184,7 @@
                                 </div>
                         </div>
         </div>
-		<div class="row col-sm-10 col-sm-offset-1" id="about">
+		<div class="row col-sm-12" id="about" style="font-size:2em">
 			<div class="panel-group">
 				<div class="panel-default">
 					<div class="panel-heading">
@@ -332,7 +335,7 @@
 			$(".status-row").hide();
 			$("#suggest-row").show();
 			$("#suggest-row").animate({opacity:1},500);
-			$.get("http://idunno.io:80/api/get_activities",
+			$.get("https://idunno.io/api/get_activities",
 				{'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
 				function(res) {
 					$("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
@@ -424,7 +427,7 @@
 	});
 
     function record_selection(choice) {
-		$.get("http://idunno.io:80/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+		$.get("https://idunno.io/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
 
 	function restart() {
