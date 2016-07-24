@@ -95,7 +95,7 @@ def record_selection(request):
     no_string_list = [str(i) for i in no_string_list]
     no_string = ','.join(no_string_list)
     decision = True if req('outcome') == '1' else False
-    selection = models.UserSelection.objects.create(outcome=decision,suggested_activity_id=req('activity'),lat=req('lat'),lng=req('lng'),yes_list=yes_string,no_list=no_string)
+    selection = models.UserSelection.objects.create(outcome=decision,suggested_activity_id=req('activity'),yes_list=yes_string,no_list=no_string)
     return JsonResponse({'status':'OK'})
 
 # Database amend view

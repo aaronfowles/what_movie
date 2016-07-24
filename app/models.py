@@ -33,8 +33,6 @@ class UserSelection(models.Model):
     outcome = models.BooleanField()
     suggested_activity = models.ForeignKey(Activity,on_delete=models.PROTECT)
     datetime = models.DateTimeField(auto_now=True)
-    lat = models.FloatField()
-    lng = models.FloatField()
     yes_list = models.CharField(max_length=128)
     no_list = models.CharField(max_length=128)
     json_field = models.CharField(max_length=128)

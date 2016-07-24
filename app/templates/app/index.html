@@ -357,7 +357,7 @@
         });
 
     	function record_selection(choice) {
-		$.get("http://127.0.0.1:8000/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+		$.get("http://127.0.0.1:8000/api/record_selection",{'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
 
 	function restart() {
@@ -366,10 +366,9 @@
 	}
 
 	function choose_activity() {
-        	$("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
-		$("#results-row").show();
-		$("#about").show();
+		var redirect_str = "https://www.google.co.uk/#q=watch" + "+" + activity_suggestion.toString().toLowerCase().split(' ').join('+');
         	record_selection(1);
+		window.location.replace(redirect_str);
 	}
 
 	$(document).ready(function() {
