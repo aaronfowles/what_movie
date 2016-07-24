@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 
 # Activity. AcivityID,ActivityName,ActivityClass
 class Activity(models.Model):
@@ -11,9 +10,9 @@ class Activity(models.Model):
     places_term = models.CharField(max_length=50,blank=True)
 
     def __str__(self):
-        return self.activity_name 
+        return self.activity_name
 
-# Tags. TagID,TagName,QuestionText 
+# Tags. TagID,TagName,QuestionText
 class Tag(models.Model):
     tag_name = models.CharField(max_length=50)
     question_text = models.CharField(max_length=50)
@@ -38,7 +37,7 @@ class UserSelection(models.Model):
     lng = models.FloatField()
     yes_list = models.CharField(max_length=128)
     no_list = models.CharField(max_length=128)
-    json_field = JSONField(blank=True, null=True)
+    json_field = models.CharField(max_length=128)
 
     def __str__(self):
         return str(self.datetime) + str(self.suggested_activity) + str(self.outcome)

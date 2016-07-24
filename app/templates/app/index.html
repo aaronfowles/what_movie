@@ -335,7 +335,7 @@
 			$(".status-row").hide();
 			$("#suggest-row").show();
 			$("#suggest-row").animate({opacity:1},500);
-			$.get("https://idunno.io/api/get_activities",
+			$.get("http://127.0.0.1:8000/api/get_activities",
 				{'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
 				function(res) {
 					$("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");

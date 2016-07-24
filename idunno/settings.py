@@ -77,12 +77,8 @@ WSGI_APPLICATION = 'idunno.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'idunno_db',
-	'USER': 'idunno_db_user',
-	'PASSWORD': 'devdevtesttest',
-	'HOST': 'localhost',
-	'PORT': '5433',
     }
 }
 
