@@ -169,21 +169,6 @@
 				</div>
 			</div>
         </div>
-	<div class="row col-sm-12" id="nearby" style="font-size:2em">
-                        <div class="panel-group">
-                                <div class="panel-default">
-                                        <div class="panel-heading">
-                                                <h2>
-                                                        <a data-toggle="collapse" href="#collapsenearby" id="nearby-click">Nearby</a>
-                                                </h2>
-                                        </div>
-                                        <div class="panel-collapse collapse" id="collapsenearby">
-                                                <div id="map">
-                                                </div>
-                                        </div>
-                                </div>
-                        </div>
-        </div>
 		<div class="row col-sm-12" id="about" style="font-size:2em">
 			<div class="panel-group">
 				<div class="panel-default">
@@ -371,118 +356,20 @@
                 decider("left");
         });
 
-	$("#nearby-click").on("click", function() {
-		$("#map").css("height","800px");
-                $("#map").css("width","100%");
-		initMap(loc);
-
-                service = new google.maps.places.PlacesService(map);
-
-                map.setCenter(loc);
-
-                var request = {
-                        location: loc,
-                        radius: '1',
-                        query: places_term
-		};
-
-                var places = [];
-                var markers = [];
-                var place;
-                var marker;
-
-		service.textSearch(request, function callback(results, status) {
-                        if (status == google.maps.places.PlacesServiceStatus.OK) {
-                                for (var i = 0; i < results.length; i++) {
-                                        place = results[i];
-                                        places.push(place);
-					defined_places_attr = {};
-					defined_places_attr['name'] = place['name'].toString();
-					if (place['icon'] != undefined) {
-						defined_places_attr['icon'] = place['icon'].toString();
-					}
-					if (place['website'] != undefined) {
-                                                defined_places_attr['website'] = place['website'].toString();
-                                        }
-					if (place['rating'] != undefined) {
-                                                defined_places_attr['rating'] = place['rating'].toString();
-                                        }
-					var title_string = "";
-					for (var i in defined_places_attr) {
-						title_string += '<strong>' + i.toString() + '</strong>: ' + defined_places_attr[i] + '. '; 
-					}
-                                        marker = new google.maps.Marker({
-                                                position: new google.maps.LatLng(place['geometry']['location']['lat'](),place['geometry']['location']['lng']()),
-                                                title: title_string,
-                                                map: map
-                                        });
-                    google.maps.event.addListener(marker, 'click', function() {
-                                        infowindow.setContent(this.title);
-                        infowindow.open(map,this);
-                                        });
-                                        markers.push(marker);
-                                }
-                        }
-                });
-	});
-
-    function record_selection(choice) {
-		$.get("https://idunno.io/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+    	function record_selection(choice) {
+		$.get("http://127.0.0.1:8000/api/record_selection",{'lat':loc['lat'](),'lng':loc['lng'](),'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
 
 	function restart() {
 		location.reload();
-        record_selection(0);
+        	record_selection(0);
 	}
 
 	function choose_activity() {
-        $("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
-	$("#results-row").show();
-	$("#map").show();
-	$("#nearby").show();
-	$("#about").show();
-        record_selection(1);
-
-        var location_string = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + loc['lat']() + "," + loc['lng']() + "&key=" + "AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg";
-        var city = '';
-        var country = '';
-        $.get(location_string, function(data) {
-            for (var i = data['results'][0]['address_components'].length - 1; i >= 0; i--) {
-                if (data['results'][0]['address_components'][i]['types'].indexOf('country') >= 0) {
-                    country = data['results'][0]['address_components'][i]['long_name'];
-                }
-                if(data['results'][0]['address_components'][i]['types'].indexOf('postal_town') >=  0) {
-                    city += " " + data['results'][0]['address_components'][i]['long_name'];
-                    var search_string = "https://www.googleapis.com/customsearch/v1?q={" + city + "," + country + "," + activity_suggestion + "}&cx=" + "012308802730163756258:oyksixjkzug" + "&key=AIzaSyD4mssxcnomADdqyD4vDExAyDFaEO7bXRg"
-                    $.get(search_string,function(data) {
-                        for (var i = 0; i < data['items'].length; i++) {
-			    console.log("Got the search results...")
-                            var id_string = "#" + i.toString() + "search";
-                            var $li = $("<li>",{id:id_string, class:"list-group-item"});
-                            $("#search-list").append($li);
-                            var $a = $("<a></a>",{href:data['items'][i]['link']});
-                            var t1 = $("<strong></strong>").text(data['items'][i]['title']);
-                            $a.append(t1);
-                            var t2 = $("<br>");
-                            var t3 = $("<a></a>",{href:data['items'][i]['link']}).text(data['items'][i]['link']);
-                            var t5 = $("<br>");
-                            var t4 = $("<span></span>").text(data['items'][i]['snippet']);
-                            $li.append($a,t2,t4);
-                        }
-                    });
-                }
-	    	}
-		});
-	}
-	
-  	function initMap(loc) {
-    	map = new google.maps.Map(document.getElementById('map'), {
-    	  	center: loc,
-      		zoom: 14
-    	});
-		infowindow = new google.maps.InfoWindow({
-    		content: ''
-  		});
+        	$("#suggest-row").animate({opacity: '0', height: '0px'},500, function() {$(this).hide()});
+		$("#results-row").show();
+		$("#about").show();
+        	record_selection(1);
 	}
 
 	$(document).ready(function() {
@@ -499,7 +386,6 @@
                 var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
                 $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
 		$("#suggest-row").hide();
-		$("#nearby").hide();
 		$("#about").hide();
 		var slickOpts = {
     		slidesToShow: 1,
@@ -514,18 +400,6 @@
 		$("#status-label").text("...left for no, right for yes...");
 		$("#status-label").animate({opacity:1},500);
 		$("#progress").animate({opacity:1},500);
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(function(position) {
-					loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			});
-                    if (loc == undefined) {
-			loc = new google.maps.LatLng(50,5);
-		    }
-		}	
-		else {	
-			loc = new google.maps.LatLng(50,5);
-		}
-		$("#map").hide();
 		$("#confirm-suggestion").on("click", choose_activity);
 		$("#restart").on("click", restart);
 	});
