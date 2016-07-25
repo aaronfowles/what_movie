@@ -9,6 +9,7 @@
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.css"/>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://use.fontawesome.com/8a03f318d8.js"></script>
 	<style type="text/css">
 	.slick-list {
 		height:100%;
@@ -110,6 +111,36 @@
 	#map {
 		width: 100%;
 	}
+	.share-btn {
+    		display: inline-block;
+    		color: #ffffff;
+   		border: none;
+    		padding: 0.5em;
+    		width: 4em;
+    		box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
+    		outline: none;
+    		text-align: center;
+	}
+
+	.share-btn:hover {
+  		color: #eeeeee;
+	}
+
+	.share-btn:active {
+  		position: relative;
+  		top: 2px;
+  		box-shadow: none;
+  		color: #e2e2e2;
+  		outline: none;
+	}
+
+	.share-btn.twitter     { background: #55acee; }
+	.share-btn.google-plus { background: #dd4b39; }
+	.share-btn.facebook    { background: #3B5998; }
+	.share-btn.stumbleupon { background: #EB4823; }
+	.share-btn.reddit       { background: #385998; }
+	.share-btn.linkedin    { background: #4875B4; }
+	.share-btn.email       { background: #444444; }
 	</style>
 	</head>
 	<body>
@@ -183,12 +214,48 @@
 				</div>
 			</div>
 		</div>
+	<div id="share-buttons" style="text-align:center">
+		<h1>
+			"Spread the Word!"
+		</h1>
+		<!-- Social Button HTML -->
+
+<!-- Twitter -->
+<a href="http://twitter.com/share?url=<URL>&text=I found a movie to watch in less than a minute using http://whatmovie.io&via=aaronfowles" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+</a>
+
+<!-- Google Plus -->
+<a href="https://plus.google.com/share?url=<BTN>" target="_blank" class="share-btn google-plus">
+    <i class="fa fa-google-plus"></i>
+</a>
+
+<!-- Facebook -->
+<a href="http://www.facebook.com/sharer/sharer.php?u=<URL>" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+</a>
+
+<!-- StumbleUpon (url, title) -->
+<a href="http://www.stumbleupon.com/submit?url=<URL>&title=<TITLE>" target="_blank" class="share-btn stumbleupon">
+    <i class="fa fa-stumbleupon" aria-hidden="true"></i>
+</a>
+
+<!-- Reddit (url, title) -->
+<a href="http://reddit.com/submit?url=<URL>&title=<TITLE>" target="_blank" class="share-btn reddit">
+    <i class="fa fa-reddit-alien" aria-hidden="true"></i>
+</a>
+
+<!-- Email -->
+<a href="mailto:?subject=<SUBJECT&body=<BODY>" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+</a>
 	</div>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlynKEta2dtp3X2eJ82DSJnVC_5QySqck&libraries=places"></script>
+	</div>
 	<script>
 	$.mobile.autoInitializePage = false;
     var activity_id = "";
     var activity_suggestion = "";
+    var share_text = "whatmovie.io recommended I watch "
 
     var places_term = "";
 	var map;
@@ -318,12 +385,12 @@
 			$("#progress-row").animate({opacity:0, height:'0px'},500);
 			$("#decider-row").animate({opacity:0, height:'0px'},500);
 			$(".status-row").hide();
-			$("#suggest-row").show();
-			$("#suggest-row").animate({opacity:1},500);
-			$.get("http://127.0.0.1:8000/api/get_activities",
+			$("#suggest-row").slideDown();
+			$("#share-buttons").slideDown();
+			$.get("http://159.203.176.186/api/get_activities",
 				{'no_list': no_list.toString(), 'yes_list': yes_list.toString()},
 				function(res) {
-					$("#suggestion-label").text("iDunno thinks you should " + res['activity_desc'] + ". Do you agree?");
+					$("#suggestion-label").text("We think you should " + res['activity_desc'] + ". Check it out?");
 					activity_suggestion = res['search_term'];
 					activity_id = res['activity_id']
 					places_term = res['places_term'];
@@ -357,7 +424,7 @@
         });
 
     	function record_selection(choice) {
-		$.get("http://127.0.0.1:8000/api/record_selection",{'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
+		$.get("http://159.203.176.186/api/record_selection",{'activity':activity_id,'outcome':choice,'no_list':no_list.toString(),'yes_list':yes_list.toString()});
 	}
 
 	function restart() {
@@ -368,7 +435,12 @@
 	function choose_activity() {
 		var redirect_str = "https://www.google.co.uk/#q=watch" + "+" + activity_suggestion.toString().toLowerCase().split(' ').join('+');
         	record_selection(1);
-		window.location.replace(redirect_str);
+		$("#suggest-row").slideUp();
+		$("#suggest-row").slideUp();
+		$("#accept").hide();
+		$("#deny").hide();
+		share_text += activity_suggestion
+		window.open(redirect_str,'_blank');
 	}
 
 	$(document).ready(function() {
@@ -386,6 +458,7 @@
                 $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
 		$("#suggest-row").hide();
 		$("#about").hide();
+		$("#share-buttons").hide();
 		var slickOpts = {
     		slidesToShow: 1,
     		dots: false,
@@ -403,5 +476,15 @@
 		$("#restart").on("click", restart);
 	});
 	</script>
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-81290931-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 	</body>
 </html>
