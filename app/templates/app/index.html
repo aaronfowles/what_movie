@@ -351,7 +351,10 @@
 
         if (counter != 5) {
         	var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
-        	$("#swiper").css({"background-image": url_string});
+        	//$("#slab1").css({"background-image": url_string});
+		//$("#slab2").css({"background-image": url_string});
+		//$("#slab3").css({"background-image": url_string});
+
         }
 
 		$("#status-label").animate({opacity:1},500, function() {
@@ -437,7 +440,9 @@
 
 		};
                 var url_string = 'url(' + decisions_struct[(counter).toString()]["image_url"] + ')';
-                $("#swiper").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
+                $("#slab1").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
+		$("#slab2").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
+		$("#slab3").css({"background-image":url_string,"background-repeat": "no-repeat", "background-size": "cover","filter": "grayscale(10%)","-webkit-filter":"blur(10px)","-webkit-filter":"grayscale(0.1)","-webkit-background-size":"cover","-moz-background-size":"cover","-o-background-size":"cover","background-position": "center"});
 		$("#suggest-row").hide();
 		$("#about").hide();
 		$("#share-buttons").hide();
