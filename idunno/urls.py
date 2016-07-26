@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from app import views
+
 urlpatterns = [
     url(r'^$', include('app.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('app.urls')),
+    url(r'^google8bfab9845e8a524e.html',views.goog, name='goog'),
 ]

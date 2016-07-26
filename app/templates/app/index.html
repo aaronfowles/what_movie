@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+	<meta name="viewport" content="initial-scale=0.35">
 	<head>
         <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet' type='text/css'>
 	<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
@@ -120,6 +121,7 @@
     		box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
     		outline: none;
     		text-align: center;
+		font-size: 4em;
 	}
 
 	.share-btn:hover {
@@ -200,53 +202,39 @@
 				</div>
 			</div>
         </div>
-		<div class="row col-sm-12" id="about" style="font-size:2em">
-			<div class="panel-group">
-				<div class="panel-default">
-					<div class="panel-heading">
-						<h2>
-							<a data-toggle="collapse" href="#collapseabout">How does it work?</a>
-						</h2>
-					</div>
-					<div class="panel-collapse collapse" id="collapseabout">
-						<strong>Google for the indecisive</strong><br>iDunno uses the latest in *insert machine learning / data science buzzwords here* to help you avoid wasted hours sifting through events websites only to realise it is now too late to actually go out and do anything.</p>
-					</div>
-				</div>
-			</div>
-		</div>
 	<div id="share-buttons" style="text-align:center">
 		<h1>
-			"Spread the Word!"
+			Spread the Word!
 		</h1>
 		<!-- Social Button HTML -->
 
 <!-- Twitter -->
-<a href="http://twitter.com/share?url=<URL>&text=I found a movie to watch in less than a minute using http://whatmovie.io&via=aaronfowles" target="_blank" class="share-btn twitter">
+<a href="http://twitter.com/share?url=http://whatmovie.io&text=I found a movie to watch in less than a minute using the What Movie? App&via=aaronfowles" target="_blank" class="share-btn twitter">
     <i class="fa fa-twitter"></i>
 </a>
 
 <!-- Google Plus -->
-<a href="https://plus.google.com/share?url=<BTN>" target="_blank" class="share-btn google-plus">
+<a href="https://plus.google.com/share?url=http://whatmovie.io" target="_blank" class="share-btn google-plus">
     <i class="fa fa-google-plus"></i>
 </a>
 
 <!-- Facebook -->
-<a href="http://www.facebook.com/sharer/sharer.php?u=<URL>" target="_blank" class="share-btn facebook">
+<a href="http://www.facebook.com/sharer/sharer.php?u=http://whatmovie.io" target="_blank" class="share-btn facebook">
     <i class="fa fa-facebook"></i>
 </a>
 
 <!-- StumbleUpon (url, title) -->
-<a href="http://www.stumbleupon.com/submit?url=<URL>&title=<TITLE>" target="_blank" class="share-btn stumbleupon">
+<a href="http://www.stumbleupon.com/submit?url=http://whatmovie.io&title=What Movie?" target="_blank" class="share-btn stumbleupon">
     <i class="fa fa-stumbleupon" aria-hidden="true"></i>
 </a>
 
 <!-- Reddit (url, title) -->
-<a href="http://reddit.com/submit?url=<URL>&title=<TITLE>" target="_blank" class="share-btn reddit">
+<a href="http://reddit.com/submit?url=http://whatmovie.io&title=What Movie?" target="_blank" class="share-btn reddit">
     <i class="fa fa-reddit-alien" aria-hidden="true"></i>
 </a>
 
 <!-- Email -->
-<a href="mailto:?subject=<SUBJECT&body=<BODY>" target="_blank" class="share-btn email">
+<a href="mailto:?subject=What Movie?&body=I finally found a way to decide which movie to watch! http://whatmovie.io" target="_blank" class="share-btn email">
     <i class="fa fa-envelope"></i>
 </a>
 	</div>
@@ -293,15 +281,9 @@
     {% endfor %}
 
     for_counter = 0;
-
-    for (var key in image_urls) {
         for (var i = 0; i < 5; i++) {
-        	if (decisions_struct[i]["tag_id"].toString() == key.toString()) {
-				decisions_struct[i]["image_url"] = image_urls[key];
-                break;
-        	}
-		}
-    }
+		decisions_struct[i]["image_url"] = "http://159.203.176.186/static/img/background.png";
+	}
 
 	decisions[0] = decisions_struct[0]["question_text"];
 	decisions[1] = decisions_struct[1]["question_text"];
